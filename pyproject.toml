@@ -12,7 +12,9 @@ license = "MIT"
 license-files = []
 keywords = []
 classifiers = []
-dependencies = []
+dependencies = [
+    "pydantic>=2.11.4",
+]
 dynamic = []
 [[project.authors]]
 name = "Austin Yu"

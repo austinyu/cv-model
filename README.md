@@ -1,11 +1,34 @@
 # resume-model
 
-This is a Python project scaffolded with scaffoldpy. Here is what you need to do next:
-1. Install the dependencies: `uv sync --all-groups`
-2. Install the pre-commit hooks: `pre-commit install`
-3. Create repo on Github
-4. Run `git remote add origin https://github.com/austinyu/<repo-name>.git`
-5. Push to remote: `git push -u origin main`
-6. Register your project on PyPi
-7. Release a new version on github.
-8. Release pipeline will automatically publish the package to PyPi.
+I want to start working on a full stack project. The idea is to help ordinary people write resume in a professional way.
+
+- frontend: nextjs
+  - Side by side view
+    - left side: editor
+      - represent resume as either json or yaml, or anything that can be validated by a schema
+      - alternatively, a UI form that will ask user input for each field in the schema
+    - right side: preview
+      - show the resume in a professional way, with a few templates to choose from
+      - allow user to download the resume as pdf, docx, etc.
+- backend: python (fastapi, typst, jinja2)
+    - front end will pass validated json resume data to backend
+    - backend pipeline:
+      - validate the json resume data against pydantic model
+      - generate typst script from json data and jinja template
+      - generate pdf from typst script
+      - return the pdf to front end for preview/download
+- deployment: I am not sure yet, I need some help here
+  - I am thinking of using vercel for frontend
+  - Some cloud service for backend, like AWS, GCP, or Azure
+
+Future roadmap:
+- generate a website from the json resume data automatically for the user
+- use llm to help user write resume
+- use llm to fine-tune the resume based on job description
+
+Comparison with rendercv:
+- rendercv use its own schema which is not compatible with jsonresume schema
+- rendercv only support yaml format, while I want to support json and yaml and ui form
+
+- [resume-schema](https://github.com/jsonresume/resume-schema)
+- [rendercv](https://github.com/rendercv/rendercv/tree/main)
