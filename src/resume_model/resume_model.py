@@ -124,6 +124,7 @@ class Volunteer(BaseModel):
     summary: str | None = None
     # Specify multiple accomplishments
     highlights: list[str] | None = None
+    location: str | None = None
 
     @staticmethod
     def get_default() -> Volunteer:
@@ -144,6 +145,7 @@ class Volunteer(BaseModel):
 class Education(BaseModel):
     # e.g. Massachusetts Institute of Technology
     institution: str | None = None
+    location: str | None = None
     # e.g. http://facebook.example.com
     url: AnyUrl | None = None
     # e.g. Arts
@@ -180,6 +182,7 @@ class Education(BaseModel):
 class Award(BaseModel):
     # e.g. One of the 100 greatest minds of the century
     title: str | None = None
+    url: AnyUrl | None = None
     # Date in ISO 8601 format
     date: Iso8601 | None = None
     # e.g. Time Magazine
@@ -314,6 +317,7 @@ class Project(BaseModel):
     entity: str | None = None
     # e.g. 'volunteering', 'presentation', 'talk', 'application', 'conference'
     type: str | None = None
+    source_code: str | None = None
 
     @staticmethod
     def get_default() -> Project:
@@ -352,29 +356,29 @@ class Resume(BaseModel):
     # The version of the JSON Resume schema that this document conforms to
     # json_schema: str = Field(alias="$schema")
     # The basics section of the resume
-    basics: Basics | None = None
+    basics: Basics
     # The work experience section of the resume
-    work: list[Work] | None = None
+    work: list[Work] = []
     # The volunteer experience section of the resume
-    volunteer: list[Volunteer] | None = None
+    volunteer: list[Volunteer] = []
     # The education section of the resume
-    education: list[Education] | None = None
+    education: list[Education] = []
     # The awards section of the resume
-    awards: list[Award] | None = None
+    awards: list[Award] = []
     # The certificates section of the resume
-    certificates: list[Certificate] | None = None
+    certificates: list[Certificate] = []
     # The publications section of the resume
-    publications: list[Publication] | None = None
+    publications: list[Publication] = []
     # The skills section of the resume
-    skills: list[Skill] | None = None
+    skills: list[Skill] = []
     # The languages section of the resume
-    languages: list[Language] | None = None
+    languages: list[Language] = []
     # The interests section of the resume
-    interests: list[Interest] | None = None
+    interests: list[Interest] = []
     # The references section of the resume
-    references: list[Reference] | None = None
+    references: list[Reference] = []
     # The projects section of the resume
-    projects: list[Project] | None = None
+    projects: list[Project] = []
     # The meta section of the resume
     meta: Meta | None = None
 
