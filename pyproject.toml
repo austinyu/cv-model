@@ -3,7 +3,7 @@ requires = [ "hatchling",]
 build-backend = "hatchling.build"
 
 [project]
-name = "resume-model"
+name = "cv-model"
 version = "0.0.0"
 description = ""
 readme = "README.md"
@@ -13,6 +13,7 @@ license-files = []
 keywords = []
 classifiers = []
 dependencies = [
+    "jinja2>=3.1.6",
     "pydantic>=2.11.4",
 ]
 dynamic = []
@@ -69,7 +70,7 @@ include = [ "README.md", "LICENSE", "CHANGELOG.md",]
 exclude = []
 
 [tool.hatch.build.targets.wheel]
-packages = [ "src/resume_model",]
+packages = [ "src/cv_model",]
 
 [tool.hatch.build.targets.wheel.sources]
-"src/resume_model" = "resume_model"
+"src/cv_model" = "cv_model"

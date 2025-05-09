@@ -653,10 +653,11 @@ wheels = [
 ]
 
 [[package]]
-name = "resume-model"
+name = "cv-model"
 version = "0.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "jinja2" },
     { name = "pydantic" },
 ]
 
@@ -680,7 +681,10 @@ tests = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pydantic", specifier = ">=2.11.4" }]
+requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "pydantic", specifier = ">=2.11.4" },
+]
 
 [package.metadata.requires-dev]
 docs = [{ name = "mkdocs" }]

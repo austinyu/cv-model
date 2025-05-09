@@ -32,7 +32,7 @@
     "pypa",
     "venv",
     "pyrightconfig",
-    "resume-model"
+    "cv-model"
   ],
   "ignoreWords": [],
   "import": []
