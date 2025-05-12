@@ -5,9 +5,15 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 Iso8601 = datetime.date | Literal["Present"]
-AnyUrl = str
 
 State = str  # two character abbreviation for US states, e.g. CA, NY
+AnyUrl = str  # URL as per RFC 3986
+
+DATE_DESCRIPTION = "Date in ISO 8601 format, e.g. YYYY-MM-DD or `Present`"
+HIGHLIGHT_DESCRIPTION = (
+    "Specify multiple highlights. e.g. `Implemented a new feature`"
+    + " or `Worked on a new project`"
+)
 
 
 class Basics(BaseModel):
@@ -15,61 +21,82 @@ class Basics(BaseModel):
         address: str = ""
         postalCode: str = ""
         city: str = ""
-        # Code as per ISO-3166-1 ALPHA-2, e.g. US, AU, IN
         countryCode: str = Field(
-            default="", json_schema_extra={"$comment": "ISO-3166-1 ALPHA-2"}
+            default="",
+            json_schema_extra={"description": "ISO-3166-1 ALPHA-2, e.g. US, AU, IN"},
         )
-        # The general region where you live. Can be a US state, or a province, for instance.
-        region: State = ""
+        region: State = Field(
+            default="",
+            json_schema_extra={"description": "ISO-3166-2, e.g. CA, NY, ON, BC, etc."},
+        )
 
     class Profiles(BaseModel):
         # e.g. Facebook or Twitter
-        network: str = ""
-        username: str = ""
-        url: AnyUrl = ""
+        network: str = Field(
+            default="",
+            json_schema_extra={"description": "e.g. Facebook or Twitter"},
+        )
+        username: str = Field(
+            default="",
+            json_schema_extra={"description": "a unique identifier for the user"},
+        )
+        url: AnyUrl | None = Field(
+            default=None,
+            json_schema_extra={"description": "full URL to the profile"},
+        )
 
     name: str = ""
     # e.g. Web Developer
-    label: str = ""
+    label: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. Web Developer"},
+    )
     # URL (as per RFC 3986) to a image in JPEG or PNG format
-    image: AnyUrl = ""
+    image: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL to a image in JPEG or PNG format"},
+    )
     # e.g. thomas@gmail.com
     email: str = ""
     # Phone numbers are stored as strings so use any format you like, e.g. 712-117-2923
-    phone: str = ""
+    phone: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "Phone numbers are stored as strings so use any "
+                + "format you like, e.g. 712-117-2923"
+            )
+        },
+    )
     # URL (as per RFC 3986) to your website, e.g. personal homepage
-    url: AnyUrl = ""
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL to your website, e.g. personal homepage"},
+    )
     # Write a short 2-3 sentence biography about yourself
-    summary: str = ""
+    summary: str = Field(
+        default="",
+        json_schema_extra={
+            "description": ("Write a short 2-3 sentence biography about yourself")
+        },
+    )
     location: Location = Location()
-    profiles: list[Profiles] = []
+    profiles: list[Profiles] = Field(
+        default=[],
+        json_schema_extra={
+            "description": "A list of social media profiles, e.g. Facebook, Twitter, LinkedIn"
+        },
+    )
 
     @staticmethod
     def get_empty() -> Basics:
-        return Basics(
-            name="",
-            label="",
-            image="",
-            email="",
-            phone="",
-            url="",
-            summary="",
-            location=Basics.Location(
-                address="",
-                postalCode="",
-                city="",
-                countryCode="",
-                region="",
-            ),
-            profiles=[],
-        )
+        return Basics()
 
     @staticmethod
     def get_default() -> Basics:
         return Basics(
             name="Austin Yu",
             label="Software Engineer",
-            image="",
             email="yuxm.austin1023@gmail.com",
             phone="+1 (xxx) xxx-xxxx",
             url="https://www.google.com",
@@ -98,34 +125,58 @@ class Basics(BaseModel):
 
 class Education(BaseModel):
     # e.g. Massachusetts Institute of Technology
-    institution: str = ""
+    institution: str = Field(
+        default="",
+        json_schema_extra={"description": "University or college name"},
+    )
     location: str = ""
-    # e.g. http://facebook.example.com
-    url: AnyUrl | None = None
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL to the university or college"},
+    )
     # e.g. Arts
-    area: str = ""
-    # e.g. Bachelor
-    studyType: str = ""
+    area: str = Field(
+        default="",
+        json_schema_extra={
+            "description": "Majors or minors. e.g. `Computer Science and Physics`"
+        },
+    )
+    studyType: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "e.g. `Bachelor of Science`, `Master of Arts`, `PhD`, `High School`"
+            )
+        },
+    )
     # Start date in ISO 8601 format
-    startDate: Iso8601 = "Present"
+    startDate: Iso8601 = Field(
+        default="Present",
+        json_schema_extra={"description": DATE_DESCRIPTION},
+    )
     # End date in ISO 8601 format
-    endDate: Iso8601 = "Present"
+    endDate: Iso8601 = Field(
+        default="Present",
+        json_schema_extra={"description": DATE_DESCRIPTION},
+    )
     # Grade point average, e.g. 3.67/4.0
-    score: str = ""
+    score: str = Field(
+        default="",
+        json_schema_extra={"description": "Grade point average, e.g. 3.67/4.0. "},
+    )
     # List notable courses/subjects
-    courses: list[str] = []
+    courses: list[str] = Field(
+        default=[],
+        json_schema_extra={
+            "description": (
+                "List notable courses/subjects. e.g. `Data Structures`, `Algorithms`"
+            )
+        },
+    )
 
     @staticmethod
     def get_empty() -> Education:
-        return Education(
-            institution="",
-            location="",
-            url="",
-            area="",
-            studyType="",
-            score="",
-            courses=[],
-        )
+        return Education()
 
     @staticmethod
     def get_default() -> list[Education]:
@@ -174,36 +225,46 @@ class Education(BaseModel):
 
 
 class Work(BaseModel):
-    # e.g. Facebook
-    name: str = ""
-    # e.g. Menlo Park, CA
-    location: str = ""
-    # e.g. Social Media Company
-    description: str = ""
-    # e.g. Software Engineer
-    position: str = ""
-    # e.g. http://facebook.example.com
-    url: AnyUrl | None = None
-    # Start date in ISO 8601 format
-    startDate: Iso8601 = "Present"
-    # End date in ISO 8601 format
-    endDate: Iso8601 = "Present"
+    name: str = Field(
+        default="",
+        json_schema_extra={"description": "Company name e.g. Facebook"},
+    )
+    location: str = Field(
+        default="",
+        json_schema_extra={"description": "Location of the company. e.g. Menlo Park, CA."},
+    )
+    description: str = Field(
+        default="",
+        json_schema_extra={
+            "description": "A short description of the company. e.g. Social Media Company"
+        },
+    )
+    position: str = Field(
+        default="", json_schema_extra={"description": "Job title e.g. Software Engineer"}
+    )
+    url: AnyUrl | None = Field(
+        default=None, json_schema_extra={"description": "URL to the company website."}
+    )
+    startDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
+    endDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
     # Overview of responsibilities at the company
-    summary: str = ""
+    summary: str = Field(
+        default="",
+        json_schema_extra={"description": "Overview of responsibilities at the company"},
+    )
     # Specify multiple accomplishments
-    highlights: list[str] = []
+    highlights: list[str] = Field(
+        default=[],
+        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+    )
 
     @staticmethod
     def get_empty() -> Work:
-        return Work(
-            name="",
-            location="",
-            description="",
-            position="",
-            url="",
-            summary="",
-            highlights=[],
-        )
+        return Work()
 
     @staticmethod
     def get_default() -> list[Work]:
@@ -261,41 +322,68 @@ class Work(BaseModel):
 
 
 class Project(BaseModel):
-    # e.g. The World Wide Web
-    name: str = ""
-    # Short summary of project. e.g. Collated works of 2017.
-    description: str = ""
-    # Specify multiple features
-    highlights: list[str] = []
-    # Specify special elements involved
-    keywords: list[str] = []
-    # Start date in ISO 8601 format
-    startDate: Iso8601 = "Present"
-    # End date in ISO 8601 format
-    endDate: Iso8601 = "Present"
-    # URL (as per RFC 3986) to the project
-    url: AnyUrl | None = None
-    # Specify your role on this project or in the company
-    roles: list[str] = []
-    # Specify the relevant company/entity affiliations
-    entity: str = ""
-    # e.g. 'volunteering', 'presentation', 'talk', 'application', 'conference'
-    type: str = ""
-    source_code: str = ""
+    name: str = Field(default="", json_schema_extra={"description": "Project name"})
+    description: str = Field(
+        default="", json_schema_extra={"description": "A short description of the project"}
+    )
+    highlights: list[str] = Field(
+        default=[],
+        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+    )
+    keywords: list[str] = Field(
+        default=[],
+        json_schema_extra={
+            "description": "Specify special elements involved. e.g. `React`, `Node.js`"
+        },
+    )
+    startDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
+    endDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL to the project preview"},
+    )
+    roles: list[str] = Field(
+        default=[],
+        json_schema_extra={
+            "description": (
+                "Specify your role on this project. e.g. `Individual Contributor`, `Maintainer`"
+                + " or `Team Lead`"
+            )
+        },
+    )
+    entity: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "Specify the relevant company/entity affiliations. e.g. `Claremont Colleges`"
+            )
+        },
+    )
+    type: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "Specify the relevant company/entity affiliations. e.g. `volunteering`, "
+                + "`presentation`, `talk`, `application`, `conference`"
+            )
+        },
+    )
+    source_code: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={
+            "description": (
+                "URL (as per RFC 3986) to the source code repository. e.g. `GitHub`, `GitLab`"
+            )
+        },
+    )
 
     @staticmethod
     def get_empty() -> Project:
-        return Project(
-            name="",
-            description="",
-            highlights=[],
-            keywords=[],
-            url="",
-            roles=[],
-            entity="",
-            type="",
-            source_code="",
-        )
+        return Project()
 
     @staticmethod
     def get_default() -> list[Project]:
@@ -339,31 +427,43 @@ class Project(BaseModel):
 
 class Volunteer(BaseModel):
     # e.g. Facebook
-    organization: str = ""
+    organization: str = Field(
+        default="",
+        json_schema_extra={"description": "Organization name e.g. SF SPCA"},
+    )
     # e.g. Software Engineer
-    position: str = ""
+    position: str = Field(
+        default="",
+        json_schema_extra={"description": "Position title e.g. Animal Care Volunteer"},
+    )
     # e.g. http://facebook.example.com
-    url: AnyUrl | None = None
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL to the organization"},
+    )
     # Start date in ISO 8601 format
-    startDate: Iso8601 = "Present"
+    startDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
     # End date in ISO 8601 format
-    endDate: Iso8601 = "Present"
+    endDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
     # Overview of responsibilities at the organization
-    summary: str = ""
+    summary: str = Field(
+        default="",
+        json_schema_extra={"description": "Overview of responsibilities at the organization"},
+    )
     # Specify multiple accomplishments
-    highlights: list[str] = []
+    highlights: list[str] = Field(
+        default=[],
+        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+    )
     location: str = ""
 
     @staticmethod
     def get_empty() -> Volunteer:
-        return Volunteer(
-            organization="",
-            position="",
-            url="",
-            summary="",
-            highlights=[],
-            location="",
-        )
+        return Volunteer()
 
     @staticmethod
     def get_default() -> list[Volunteer]:
@@ -401,13 +501,26 @@ class Volunteer(BaseModel):
 
 class Award(BaseModel):
     # e.g. One of the 100 greatest minds of the century
-    title: str = ""
-    url: AnyUrl | None = None
+    title: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. One of the 100 greatest minds of the century"},
+    )
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={"description": "URL (as per RFC 3986) to the award or recognition"},
+    )
     # Date in ISO 8601 format
-    date: Iso8601 = "Present"
+    date: Iso8601 = Field(
+        default="Present",
+        json_schema_extra={"description": DATE_DESCRIPTION},
+    )
     # e.g. Time Magazine
-    awarder: str = ""
-    # e.g. Received for my work with Quantum Physics
+    awarder: str = Field(
+        default="",
+        json_schema_extra={
+            "description": "the organization that awarded you e.g. Time Magazine"
+        },
+    )
     summary: str = ""
 
     @staticmethod
@@ -454,22 +567,30 @@ class Award(BaseModel):
 
 
 class Certificate(BaseModel):
-    # e.g. Certified Kubernetes Administrator
-    name: str = ""
-    # Date in ISO 8601 format
-    date: Iso8601 = "Present"
-    # e.g. http://example.com
-    url: AnyUrl | None = None
-    # e.g. CNCF
-    issuer: str = ""
+    name: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. AWS Certified Solutions Architect"},
+    )
+    date: Iso8601 = Field(
+        default="Present",
+        json_schema_extra={"description": DATE_DESCRIPTION},
+    )
+    url: AnyUrl | None = Field(
+        default=None,
+        json_schema_extra={
+            "description": "URL (as per RFC 3986) to the certificate or recognition"
+        },
+    )
+    issuer: str = Field(
+        default="",
+        json_schema_extra={
+            "description": "the organization that issued the certificate e.g. CNCF"
+        },
+    )
 
     @staticmethod
     def get_empty() -> Certificate:
-        return Certificate(
-            name="",
-            url="",
-            issuer="",
-        )
+        return Certificate()
 
     @staticmethod
     def get_default() -> list[Certificate]:
@@ -509,14 +630,20 @@ class Certificate(BaseModel):
 
 class Publication(BaseModel):
     # e.g. The World Wide Web
-    name: str = ""
+    name: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. The World Wide Web"},
+    )
     # e.g. IEEE, Computer Magazine
-    publisher: str = ""
+    publisher: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. IEEE, Computer Magazine"},
+    )
     # Release date in ISO 8601 format
-    releaseDate: Iso8601 = "Present"
-    # e.g. http://www.computer.org.example.com/csdl/mags/co/1996/10/rx069-abs.html
+    releaseDate: Iso8601 = Field(
+        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+    )
     url: AnyUrl | None = None
-    # Short summary of publication
     summary: str = ""
 
     @staticmethod
@@ -563,20 +690,28 @@ class Publication(BaseModel):
 
 
 class Skill(BaseModel):
-    # e.g. Web Development
-    name: str = ""
-    # e.g. Master
-    level: str = ""
-    # List some keywords pertaining to this skill
-    keywords: list[str] = []
+    name: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. Web Development"},
+    )
+    level: str = Field(
+        default="",
+        json_schema_extra={
+            "description": ("e.g. `Beginner`, `Intermediate`, `Advanced`, `Master`, `Expert`")
+        },
+    )
+    keywords: list[str] = Field(
+        default=[],
+        json_schema_extra={
+            "description": (
+                "List some keywords pertaining to this skill. e.g. `HTML`, `CSS`, `JavaScript`"
+            )
+        },
+    )
 
     @staticmethod
     def get_empty() -> Skill:
-        return Skill(
-            name="",
-            level="",
-            keywords=[],
-        )
+        return Skill()
 
     @staticmethod
     def get_default() -> list[Skill]:
@@ -628,16 +763,25 @@ class Skill(BaseModel):
 
 class Language(BaseModel):
     # e.g. English, Spanish
-    language: str = ""
-    # e.g. Fluent, Beginner
-    fluency: str = ""
+    language: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "e.g. English, Spanish, Mandarin, French, German, etc."
+                + " Use ISO 639-1 language codes where possible."
+            )
+        },
+    )
+    fluency: str = Field(
+        default="",
+        json_schema_extra={
+            "description": "e.g. `Fluent`, `Conversational`, `Basic`, `Native speaker`"
+        },
+    )
 
     @staticmethod
     def get_empty() -> Language:
-        return Language(
-            language="",
-            fluency="",
-        )
+        return Language()
 
     @staticmethod
     def get_default() -> list[Language]:
@@ -651,16 +795,26 @@ class Language(BaseModel):
 
 class Interest(BaseModel):
     # e.g. Philosophy
-    name: str = ""
+    name: str = Field(
+        default="",
+        json_schema_extra={
+            "description": ("e.g. Philosophy, Computer Science, Mathematics, Physics, etc.")
+        },
+    )
     # List some keywords pertaining to this interest
-    keywords: list[str] = []
+    keywords: list[str] = Field(
+        default=[],
+        json_schema_extra={
+            "description": (
+                "List some keywords pertaining to this interest. e.g. `Quantum Computing`, "
+                + "`Artificial Intelligence`, `Machine Learning`"
+            )
+        },
+    )
 
     @staticmethod
     def get_empty() -> Interest:
-        return Interest(
-            name="",
-            keywords=[],
-        )
+        return Interest()
 
     @staticmethod
     def get_default() -> list[Interest]:
@@ -699,16 +853,23 @@ class Interest(BaseModel):
 
 class Reference(BaseModel):
     # e.g. Timothy Cook
-    name: str = ""
-    # e.g. Joe blogs was a great employee, who turned up to work at least once a week. He exceeded my expectations when it came to doing nothing.
-    reference: str = ""
+    name: str = Field(
+        default="",
+        json_schema_extra={"description": "e.g. Timothy Cook, Bill Gates, Elon Musk, etc."},
+    )
+    reference: str = Field(
+        default="",
+        json_schema_extra={
+            "description": (
+                "e.g. Joe blogs was a great employee, who turned up to work at least once a week."
+                + " He exceeded my expectations when it came to doing nothing."
+            )
+        },
+    )
 
     @staticmethod
     def get_empty() -> Reference:
-        return Reference(
-            name="",
-            reference="",
-        )
+        return Reference()
 
     @staticmethod
     def get_default() -> list[Reference]:
@@ -741,24 +902,35 @@ class Meta(BaseModel):
         return Meta(
             canonical="https://example.com/resume.json",
             version="v1.0.0",
-            lastModified=datetime.datetime.now(),
+            lastModified=datetime.datetime.now().date(),
         )
 
 
 class CustomSection(BaseModel):
     class Highlight(BaseModel):
-        summary: str = ""
-        description: str = ""
+        summary: str = Field(
+            default="",
+            json_schema_extra={"description": "A short summary of the highlight."},
+        )
+        description: str = Field(
+            default="",
+            json_schema_extra={
+                "description": (
+                    "A detailed description of the highlight. e.g. `Developed a new feature "
+                    + "that allows users to...`"
+                )
+            },
+        )
 
     title: str = ""
-    highlights: list[Highlight] = []
+    highlights: list[Highlight] = Field(
+        default=[],
+        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+    )
 
     @staticmethod
     def get_empty() -> CustomSection:
-        return CustomSection(
-            title="",
-            highlights=[],
-        )
+        return CustomSection()
 
     @staticmethod
     def get_default() -> list[CustomSection]:
@@ -805,57 +977,70 @@ class CustomSection(BaseModel):
 
 
 class Resume(BaseModel):
-    # The version of the JSON Resume schema that this document conforms to
     json_schema: str = Field(
         default="https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schema.json",
         alias="$schema",
     )
-    # The basics section of the resume
-    basics: Basics
-    # The work experience section of the resume
-    work: list[Work] = []
-    # The volunteer experience section of the resume
-    volunteer: list[Volunteer] = []
-    # The education section of the resume
-    education: list[Education] = []
-    # The awards section of the resume
-    awards: list[Award] = []
-    # The certificates section of the resume
-    certificates: list[Certificate] = []
-    # The publications section of the resume
-    publications: list[Publication] = []
-    # The skills section of the resume
-    skills: list[Skill] = []
-    # The languages section of the resume
-    languages: list[Language] = []
-    # The interests section of the resume
-    interests: list[Interest] = []
-    # The references section of the resume
-    references: list[Reference] = []
-    # The projects section of the resume
-    projects: list[Project] = []  # The meta section of the resume
-
-    custom_sections: list[CustomSection] = []
-    meta: Meta | None = None
+    basics: Basics = Field(
+        default=Basics.get_empty(),
+        json_schema_extra={"description": "The basics section of the resume."}
+    )
+    work: list[Work] = Field(
+        default=[],
+        json_schema_extra={"description": "The work experience section of the resume."},
+    )
+    volunteer: list[Volunteer] = Field(
+        default=[],
+        json_schema_extra={"description": "The volunteer experience section of the resume"},
+    )
+    education: list[Education] = Field(
+        default=[],
+        json_schema_extra={"description": "The education section of the resume"},
+    )
+    awards: list[Award] = Field(
+        default=[],
+        json_schema_extra={"description": "The awards section of the resume"},
+    )
+    certificates: list[Certificate] = Field(
+        default=[],
+        json_schema_extra={"description": "The certificates section of the resume"},
+    )
+    publications: list[Publication] = Field(
+        default=[],
+        json_schema_extra={"description": "The publications section of the resume"},
+    )
+    skills: list[Skill] = Field(
+        default=[],
+        json_schema_extra={"description": "The skills section of the resume"},
+    )
+    languages: list[Language] = Field(
+        default=[],
+        json_schema_extra={"description": "The languages section of the resume"},
+    )
+    interests: list[Interest] = Field(
+        default=[],
+        json_schema_extra={"description": "The interests section of the resume"},
+    )
+    references: list[Reference] = Field(
+        default=[],
+        json_schema_extra={"description": "The references section of the resume"},
+    )
+    projects: list[Project] = Field(
+        default=[],
+        json_schema_extra={"description": "The projects section of the resume"},
+    )
+    custom_sections: list[CustomSection] = Field(
+        default=[],
+        json_schema_extra={"description": "The custom sections of the resume"},
+    )
+    meta: Meta | None = Field(
+        default=None,
+        json_schema_extra={"description": "The meta section of the resume. This is optional."},
+    )
 
     @staticmethod
     def get_empty() -> Resume:
-        return Resume(
-            basics=Basics.get_empty(),
-            work=[],
-            volunteer=[],
-            education=[],
-            awards=[],
-            certificates=[],
-            publications=[],
-            skills=[],
-            languages=[],
-            interests=[],
-            references=[],
-            projects=[],
-            custom_sections=[],
-            meta=Meta.get_default(),
-        )
+        return Resume()
 
     @staticmethod
     def get_default() -> Resume:
