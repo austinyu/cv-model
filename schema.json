@@ -2,28 +2,88 @@
   "$defs": {
     "Award": {
       "properties": {
-        "title": { "default": "", "title": "Title", "type": "string" },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "date": { "default": "", "title": "Date", "type": "string" },
-        "awarder": { "default": "", "title": "Awarder", "type": "string" },
-        "summary": { "default": "", "title": "Summary", "type": "string" }
+        "date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Date"
+        },
+        "awarder": {
+          "default": "",
+          "title": "Awarder",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        }
       },
       "title": "Award",
       "type": "object"
     },
     "Basics": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "label": { "default": "", "title": "Label", "type": "string" },
-        "image": { "default": "", "title": "Image", "type": "string" },
-        "email": { "default": "", "title": "Email", "type": "string" },
-        "phone": { "default": "", "title": "Phone", "type": "string" },
-        "url": { "default": "", "title": "Url", "type": "string" },
-        "summary": { "default": "", "title": "Summary", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "label": {
+          "default": "",
+          "title": "Label",
+          "type": "string"
+        },
+        "image": {
+          "default": "",
+          "title": "Image",
+          "type": "string"
+        },
+        "email": {
+          "default": "",
+          "title": "Email",
+          "type": "string"
+        },
+        "phone": {
+          "default": "",
+          "title": "Phone",
+          "type": "string"
+        },
+        "url": {
+          "default": "",
+          "title": "Url",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
         "location": {
           "$ref": "#/$defs/Location",
           "default": {
@@ -36,7 +96,9 @@
         },
         "profiles": {
           "default": [],
-          "items": { "$ref": "#/$defs/Profiles" },
+          "items": {
+            "$ref": "#/$defs/Profiles"
+          },
           "title": "Profiles",
           "type": "array"
         }
@@ -46,24 +108,58 @@
     },
     "Certificate": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "date": { "default": "", "title": "Date", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Date"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "issuer": { "default": "", "title": "Issuer", "type": "string" }
+        "issuer": {
+          "default": "",
+          "title": "Issuer",
+          "type": "string"
+        }
       },
       "title": "Certificate",
       "type": "object"
     },
     "CustomSection": {
       "properties": {
-        "title": { "default": "", "title": "Title", "type": "string" },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
         "highlights": {
           "default": [],
-          "items": { "$ref": "#/$defs/Highlight" },
+          "items": {
+            "$ref": "#/$defs/Highlight"
+          },
           "title": "Highlights",
           "type": "array"
         }
@@ -78,20 +174,71 @@
           "title": "Institution",
           "type": "string"
         },
-        "location": { "default": "", "title": "Location", "type": "string" },
+        "location": {
+          "default": "",
+          "title": "Location",
+          "type": "string"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "area": { "default": "", "title": "Area", "type": "string" },
-        "studyType": { "default": "", "title": "Studytype", "type": "string" },
-        "startDate": { "default": "", "title": "Startdate", "type": "string" },
-        "endDate": { "default": "", "title": "Enddate", "type": "string" },
-        "score": { "default": "", "title": "Score", "type": "string" },
+        "area": {
+          "default": "",
+          "title": "Area",
+          "type": "string"
+        },
+        "studyType": {
+          "default": "",
+          "title": "Studytype",
+          "type": "string"
+        },
+        "startDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Startdate"
+        },
+        "endDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Enddate"
+        },
+        "score": {
+          "default": "",
+          "title": "Score",
+          "type": "string"
+        },
         "courses": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Courses",
           "type": "array"
         }
@@ -101,7 +248,11 @@
     },
     "Highlight": {
       "properties": {
-        "summary": { "default": "", "title": "Summary", "type": "string" },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
         "description": {
           "default": "",
           "title": "Description",
@@ -113,10 +264,16 @@
     },
     "Interest": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
         "keywords": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Keywords",
           "type": "array"
         }
@@ -126,27 +283,48 @@
     },
     "Language": {
       "properties": {
-        "language": { "default": "", "title": "Language", "type": "string" },
-        "fluency": { "default": "", "title": "Fluency", "type": "string" }
+        "language": {
+          "default": "",
+          "title": "Language",
+          "type": "string"
+        },
+        "fluency": {
+          "default": "",
+          "title": "Fluency",
+          "type": "string"
+        }
       },
       "title": "Language",
       "type": "object"
     },
     "Location": {
       "properties": {
-        "address": { "default": "", "title": "Address", "type": "string" },
+        "address": {
+          "default": "",
+          "title": "Address",
+          "type": "string"
+        },
         "postalCode": {
           "default": "",
           "title": "Postalcode",
           "type": "string"
         },
-        "city": { "default": "", "title": "City", "type": "string" },
+        "city": {
+          "default": "",
+          "title": "City",
+          "type": "string"
+        },
         "countryCode": {
+          "$comment": "ISO-3166-1 ALPHA-2",
           "default": "",
           "title": "Countrycode",
           "type": "string"
         },
-        "region": { "default": "", "title": "Region", "type": "string" }
+        "region": {
+          "default": "",
+          "title": "Region",
+          "type": "string"
+        }
       },
       "title": "Location",
       "type": "object"
@@ -154,32 +332,62 @@
     "Meta": {
       "properties": {
         "canonical": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Canonical"
         },
-        "version": { "default": "", "title": "Version", "type": "string" },
-        "lastModified": {
+        "version": {
           "default": "",
+          "title": "Version",
+          "type": "string"
+        },
+        "lastModified": {
+          "format": "date",
           "title": "Lastmodified",
           "type": "string"
         }
       },
+      "required": [
+        "lastModified"
+      ],
       "title": "Meta",
       "type": "object"
     },
     "Profiles": {
       "properties": {
-        "network": { "default": "", "title": "Network", "type": "string" },
-        "username": { "default": "", "title": "Username", "type": "string" },
-        "url": { "default": "", "title": "Url", "type": "string" }
+        "network": {
+          "default": "",
+          "title": "Network",
+          "type": "string"
+        },
+        "username": {
+          "default": "",
+          "title": "Username",
+          "type": "string"
+        },
+        "url": {
+          "default": "",
+          "title": "Url",
+          "type": "string"
+        }
       },
       "title": "Profiles",
       "type": "object"
     },
     "Project": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
         "description": {
           "default": "",
           "title": "Description",
@@ -187,31 +395,78 @@
         },
         "highlights": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Highlights",
           "type": "array"
         },
         "keywords": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Keywords",
           "type": "array"
         },
-        "startDate": { "default": "", "title": "Startdate", "type": "string" },
-        "endDate": { "default": "", "title": "Enddate", "type": "string" },
+        "startDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Startdate"
+        },
+        "endDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Enddate"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
         "roles": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Roles",
           "type": "array"
         },
-        "entity": { "default": "", "title": "Entity", "type": "string" },
-        "type": { "default": "", "title": "Type", "type": "string" },
+        "entity": {
+          "default": "",
+          "title": "Entity",
+          "type": "string"
+        },
+        "type": {
+          "default": "",
+          "title": "Type",
+          "type": "string"
+        },
         "source_code": {
           "default": "",
           "title": "Source Code",
@@ -223,38 +478,84 @@
     },
     "Publication": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "publisher": { "default": "", "title": "Publisher", "type": "string" },
-        "releaseDate": {
+        "name": {
           "default": "",
-          "title": "Releasedate",
+          "title": "Name",
           "type": "string"
         },
+        "publisher": {
+          "default": "",
+          "title": "Publisher",
+          "type": "string"
+        },
+        "releaseDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Releasedate"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "summary": { "default": "", "title": "Summary", "type": "string" }
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        }
       },
       "title": "Publication",
       "type": "object"
     },
     "Reference": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "reference": { "default": "", "title": "Reference", "type": "string" }
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "reference": {
+          "default": "",
+          "title": "Reference",
+          "type": "string"
+        }
       },
       "title": "Reference",
       "type": "object"
     },
     "Skill": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "level": { "default": "", "title": "Level", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "level": {
+          "default": "",
+          "title": "Level",
+          "type": "string"
+        },
         "keywords": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Keywords",
           "type": "array"
         }
@@ -269,47 +570,145 @@
           "title": "Organization",
           "type": "string"
         },
-        "position": { "default": "", "title": "Position", "type": "string" },
+        "position": {
+          "default": "",
+          "title": "Position",
+          "type": "string"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "startDate": { "default": "", "title": "Startdate", "type": "string" },
-        "endDate": { "default": "", "title": "Enddate", "type": "string" },
-        "summary": { "default": "", "title": "Summary", "type": "string" },
+        "startDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Startdate"
+        },
+        "endDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Enddate"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
         "highlights": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Highlights",
           "type": "array"
         },
-        "location": { "default": "", "title": "Location", "type": "string" }
+        "location": {
+          "default": "",
+          "title": "Location",
+          "type": "string"
+        }
       },
       "title": "Volunteer",
       "type": "object"
     },
     "Work": {
       "properties": {
-        "name": { "default": "", "title": "Name", "type": "string" },
-        "location": { "default": "", "title": "Location", "type": "string" },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "location": {
+          "default": "",
+          "title": "Location",
+          "type": "string"
+        },
         "description": {
           "default": "",
           "title": "Description",
           "type": "string"
         },
-        "position": { "default": "", "title": "Position", "type": "string" },
+        "position": {
+          "default": "",
+          "title": "Position",
+          "type": "string"
+        },
         "url": {
-          "anyOf": [{ "type": "string" }, { "type": "null" }],
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
           "default": null,
           "title": "Url"
         },
-        "startDate": { "default": "", "title": "Startdate", "type": "string" },
-        "endDate": { "default": "", "title": "Enddate", "type": "string" },
-        "summary": { "default": "", "title": "Summary", "type": "string" },
+        "startDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Startdate"
+        },
+        "endDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "const": "Present",
+              "type": "string"
+            }
+          ],
+          "default": "Present",
+          "title": "Enddate"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
         "highlights": {
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "title": "Highlights",
           "type": "array"
         }
@@ -319,85 +718,125 @@
     }
   },
   "properties": {
-    "basics": { "$ref": "#/$defs/Basics" },
+    "$schema": {
+      "default": "https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schema.json",
+      "title": "$Schema",
+      "type": "string"
+    },
+    "basics": {
+      "$ref": "#/$defs/Basics"
+    },
     "work": {
       "default": [],
-      "items": { "$ref": "#/$defs/Work" },
+      "items": {
+        "$ref": "#/$defs/Work"
+      },
       "title": "Work",
       "type": "array"
     },
     "volunteer": {
       "default": [],
-      "items": { "$ref": "#/$defs/Volunteer" },
+      "items": {
+        "$ref": "#/$defs/Volunteer"
+      },
       "title": "Volunteer",
       "type": "array"
     },
     "education": {
       "default": [],
-      "items": { "$ref": "#/$defs/Education" },
+      "items": {
+        "$ref": "#/$defs/Education"
+      },
       "title": "Education",
       "type": "array"
     },
     "awards": {
       "default": [],
-      "items": { "$ref": "#/$defs/Award" },
+      "items": {
+        "$ref": "#/$defs/Award"
+      },
       "title": "Awards",
       "type": "array"
     },
     "certificates": {
       "default": [],
-      "items": { "$ref": "#/$defs/Certificate" },
+      "items": {
+        "$ref": "#/$defs/Certificate"
+      },
       "title": "Certificates",
       "type": "array"
     },
     "publications": {
       "default": [],
-      "items": { "$ref": "#/$defs/Publication" },
+      "items": {
+        "$ref": "#/$defs/Publication"
+      },
       "title": "Publications",
       "type": "array"
     },
     "skills": {
       "default": [],
-      "items": { "$ref": "#/$defs/Skill" },
+      "items": {
+        "$ref": "#/$defs/Skill"
+      },
       "title": "Skills",
       "type": "array"
     },
     "languages": {
       "default": [],
-      "items": { "$ref": "#/$defs/Language" },
+      "items": {
+        "$ref": "#/$defs/Language"
+      },
       "title": "Languages",
       "type": "array"
     },
     "interests": {
       "default": [],
-      "items": { "$ref": "#/$defs/Interest" },
+      "items": {
+        "$ref": "#/$defs/Interest"
+      },
       "title": "Interests",
       "type": "array"
     },
     "references": {
       "default": [],
-      "items": { "$ref": "#/$defs/Reference" },
+      "items": {
+        "$ref": "#/$defs/Reference"
+      },
       "title": "References",
       "type": "array"
     },
     "projects": {
       "default": [],
-      "items": { "$ref": "#/$defs/Project" },
+      "items": {
+        "$ref": "#/$defs/Project"
+      },
       "title": "Projects",
       "type": "array"
     },
     "custom_sections": {
       "default": [],
-      "items": { "$ref": "#/$defs/CustomSection" },
+      "items": {
+        "$ref": "#/$defs/CustomSection"
+      },
       "title": "Custom Sections",
       "type": "array"
     },
     "meta": {
-      "anyOf": [{ "$ref": "#/$defs/Meta" }, { "type": "null" }],
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Meta"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "default": null
     }
   },
-  "required": ["basics"],
+  "required": [
+    "basics"
+  ],
   "title": "Resume",
   "type": "object"
 }

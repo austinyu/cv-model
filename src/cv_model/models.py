@@ -1,8 +1,10 @@
 from __future__ import annotations
+import datetime
+from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-Iso8601 = str
+Iso8601 = datetime.date | Literal["Present"]
 AnyUrl = str
 
 State = str  # two character abbreviation for US states, e.g. CA, NY
@@ -14,7 +16,9 @@ class Basics(BaseModel):
         postalCode: str = ""
         city: str = ""
         # Code as per ISO-3166-1 ALPHA-2, e.g. US, AU, IN
-        countryCode: str = ""
+        countryCode: str = Field(
+            default="", json_schema_extra={"$comment": "ISO-3166-1 ALPHA-2"}
+        )
         # The general region where you live. Can be a US state, or a province, for instance.
         region: State = ""
 
@@ -39,6 +43,26 @@ class Basics(BaseModel):
     summary: str = ""
     location: Location = Location()
     profiles: list[Profiles] = []
+
+    @staticmethod
+    def get_empty() -> Basics:
+        return Basics(
+            name="",
+            label="",
+            image="",
+            email="",
+            phone="",
+            url="",
+            summary="",
+            location=Basics.Location(
+                address="",
+                postalCode="",
+                city="",
+                countryCode="",
+                region="",
+            ),
+            profiles=[],
+        )
 
     @staticmethod
     def get_default() -> Basics:
@@ -83,13 +107,25 @@ class Education(BaseModel):
     # e.g. Bachelor
     studyType: str = ""
     # Start date in ISO 8601 format
-    startDate: Iso8601 = ""
+    startDate: Iso8601 = "Present"
     # End date in ISO 8601 format
-    endDate: Iso8601 = ""
+    endDate: Iso8601 = "Present"
     # Grade point average, e.g. 3.67/4.0
     score: str = ""
     # List notable courses/subjects
     courses: list[str] = []
+
+    @staticmethod
+    def get_empty() -> Education:
+        return Education(
+            institution="",
+            location="",
+            url="",
+            area="",
+            studyType="",
+            score="",
+            courses=[],
+        )
 
     @staticmethod
     def get_default() -> list[Education]:
@@ -100,8 +136,8 @@ class Education(BaseModel):
                 url="https://stanford.edu",
                 area="Physics and Computer Science",
                 studyType="Bachelor of Science",
-                startDate="2019-09-01",
-                endDate="2023-06-01",
+                startDate=datetime.date.fromisoformat("2019-09-01"),
+                endDate=datetime.date.fromisoformat("2023-06-01"),
                 score="3.9/4.0",
                 courses=[
                     "Data Structures",
@@ -120,8 +156,8 @@ class Education(BaseModel):
                 url="https://berkeley.edu",
                 area="Computer Science",
                 studyType="Master of Science",
-                startDate="2023-08-01",
-                endDate="2025-05-01",
+                startDate=datetime.date.fromisoformat("2023-08-01"),
+                endDate=datetime.date.fromisoformat("2025-05-01"),
                 score="4.0/4.0",
                 courses=[
                     "Advanced Machine Learning",
@@ -149,13 +185,25 @@ class Work(BaseModel):
     # e.g. http://facebook.example.com
     url: AnyUrl | None = None
     # Start date in ISO 8601 format
-    startDate: Iso8601 = ""
+    startDate: Iso8601 = "Present"
     # End date in ISO 8601 format
-    endDate: Iso8601 = ""
+    endDate: Iso8601 = "Present"
     # Overview of responsibilities at the company
     summary: str = ""
     # Specify multiple accomplishments
     highlights: list[str] = []
+
+    @staticmethod
+    def get_empty() -> Work:
+        return Work(
+            name="",
+            location="",
+            description="",
+            position="",
+            url="",
+            summary="",
+            highlights=[],
+        )
 
     @staticmethod
     def get_default() -> list[Work]:
@@ -166,8 +214,8 @@ class Work(BaseModel):
                 description="Azure Cloud Services Team",
                 position="Software Engineer Intern",
                 url="https://microsoft.com",
-                startDate="2023-05-15",
-                endDate="2023-08-15",
+                startDate=datetime.date.fromisoformat("2023-05-15"),
+                endDate=datetime.date.fromisoformat("2023-08-15"),
                 summary="Developed solutions for Azure cloud services and improved performance metrics.",
                 highlights=[
                     "Developed a distributed caching solution for Azure Functions, reducing cold start latency by 30% and improving overall performance for serverless applications.",
@@ -183,8 +231,8 @@ class Work(BaseModel):
                 description="Alexa Smart Home Team",
                 position="Software Development Engineer Intern",
                 url="https://amazon.com",
-                startDate="2022-06-01",
-                endDate="2022-09-01",
+                startDate=datetime.date.fromisoformat("2022-06-01"),
+                endDate=datetime.date.fromisoformat("2022-09-01"),
                 highlights=[
                     "Designed and implemented a feature to integrate third-party smart home devices with Alexa, increasing compatibility by 20%.",
                     "Optimized voice recognition algorithms, reducing error rates by 15% and improving user satisfaction.",
@@ -199,8 +247,8 @@ class Work(BaseModel):
                 description="Autopilot Software Team",
                 position="Software Engineer Intern",
                 url="https://tesla.com",
-                startDate="2021-06-01",
-                endDate="2021-08-31",
+                startDate=datetime.date.fromisoformat("2021-06-01"),
+                endDate=datetime.date.fromisoformat("2021-08-31"),
                 highlights=[
                     "Developed and tested computer vision algorithms for lane detection, improving accuracy by 25% in challenging driving conditions.",
                     "Enhanced the performance of real-time object detection systems, reducing processing latency by 10%.",
@@ -222,9 +270,9 @@ class Project(BaseModel):
     # Specify special elements involved
     keywords: list[str] = []
     # Start date in ISO 8601 format
-    startDate: Iso8601 = ""
+    startDate: Iso8601 = "Present"
     # End date in ISO 8601 format
-    endDate: Iso8601 = ""
+    endDate: Iso8601 = "Present"
     # URL (as per RFC 3986) to the project
     url: AnyUrl | None = None
     # Specify your role on this project or in the company
@@ -234,6 +282,20 @@ class Project(BaseModel):
     # e.g. 'volunteering', 'presentation', 'talk', 'application', 'conference'
     type: str = ""
     source_code: str = ""
+
+    @staticmethod
+    def get_empty() -> Project:
+        return Project(
+            name="",
+            description="",
+            highlights=[],
+            keywords=[],
+            url="",
+            roles=[],
+            entity="",
+            type="",
+            source_code="",
+        )
 
     @staticmethod
     def get_default() -> list[Project]:
@@ -247,8 +309,8 @@ class Project(BaseModel):
                     "Coordinated with college administrators to ensure accurate and timely release of course data.",
                 ],
                 keywords=["React", "TypeScript", "MongoDB", "Git"],
-                startDate="2022-01-01",
-                endDate="2023-06-01",
+                startDate=datetime.date.fromisoformat("2022-01-01"),
+                endDate="Present",
                 url="https://hyperschedule.io",
                 roles=["Individual Contributor", "Maintainer"],
                 entity="Claremont Colleges",
@@ -264,8 +326,8 @@ class Project(BaseModel):
                     "Provided technical support and documentation to assist users and administrators with platform usage.",
                 ],
                 keywords=["React", "Node.js", "PostgreSQL", "Git"],
-                startDate="2021-09-01",
-                endDate="2022-12-01",
+                startDate=datetime.date.fromisoformat("2021-09-01"),
+                endDate=datetime.date.fromisoformat("2022-12-01"),
                 url="",
                 roles=["Individual Contributor", "Maintainer"],
                 entity="Claremont Colleges",
@@ -283,14 +345,25 @@ class Volunteer(BaseModel):
     # e.g. http://facebook.example.com
     url: AnyUrl | None = None
     # Start date in ISO 8601 format
-    startDate: Iso8601 = ""
+    startDate: Iso8601 = "Present"
     # End date in ISO 8601 format
-    endDate: Iso8601 = ""
+    endDate: Iso8601 = "Present"
     # Overview of responsibilities at the organization
     summary: str = ""
     # Specify multiple accomplishments
     highlights: list[str] = []
     location: str = ""
+
+    @staticmethod
+    def get_empty() -> Volunteer:
+        return Volunteer(
+            organization="",
+            position="",
+            url="",
+            summary="",
+            highlights=[],
+            location="",
+        )
 
     @staticmethod
     def get_default() -> list[Volunteer]:
@@ -299,8 +372,8 @@ class Volunteer(BaseModel):
                 organization="Bay Area Homeless Shelter",
                 position="Volunteer Coordinator",
                 url="",
-                startDate="2023-01-01",
-                endDate="2023-05-01",
+                startDate=datetime.date.fromisoformat("2023-01-01"),
+                endDate=datetime.date.fromisoformat("2023-05-01"),
                 summary="Coordinated volunteer efforts to support homeless individuals in the Bay Area, providing essential services and resources.",
                 location="Bay Area, CA",
                 highlights=[
@@ -313,8 +386,8 @@ class Volunteer(BaseModel):
                 organization="Stanford University",
                 position="Volunteer Tutor",
                 url="stanford.edu",
-                startDate="2023-06-01",
-                endDate="2023-09-01",
+                startDate=datetime.date.fromisoformat("2023-06-01"),
+                endDate=datetime.date.fromisoformat("2023-09-01"),
                 location="Stanford, CA",
                 summary="Provided tutoring support to high school students in mathematics and science subjects, fostering academic growth and confidence.",
                 highlights=[
@@ -331,39 +404,48 @@ class Award(BaseModel):
     title: str = ""
     url: AnyUrl | None = None
     # Date in ISO 8601 format
-    date: Iso8601 = ""
+    date: Iso8601 = "Present"
     # e.g. Time Magazine
     awarder: str = ""
     # e.g. Received for my work with Quantum Physics
     summary: str = ""
 
     @staticmethod
+    def get_empty() -> Award:
+        return Award(
+            title="",
+            url="",
+            awarder="",
+            summary="",
+        )
+
+    @staticmethod
     def get_default() -> list[Award]:
         return [
             Award(
                 title="Best Student Award",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
                 url="https://stanford.edu",
                 awarder="Stanford University",
                 summary="",
             ),
             Award(
                 title="Dean's List",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
                 url="",
                 awarder="Stanford University",
                 summary="Achieved Dean's List status for maintaining a GPA of 3.9 or higher.",
             ),
             Award(
                 title="Outstanding Research Assistant",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
                 url="https://stanford.edu",
                 awarder="",
                 summary="Recognized for exceptional contributions to research projects in the Physics and Computer Science departments.",
             ),
             Award(
                 title="Best Paper Award",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
                 url="https://berkeley.edu",
                 awarder="University of California, Berkeley",
                 summary="Received Best Paper Award at the UC Berkeley Graduate Research Symposium.",
@@ -375,11 +457,19 @@ class Certificate(BaseModel):
     # e.g. Certified Kubernetes Administrator
     name: str = ""
     # Date in ISO 8601 format
-    date: Iso8601 = ""
+    date: Iso8601 = "Present"
     # e.g. http://example.com
     url: AnyUrl | None = None
     # e.g. CNCF
     issuer: str = ""
+
+    @staticmethod
+    def get_empty() -> Certificate:
+        return Certificate(
+            name="",
+            url="",
+            issuer="",
+        )
 
     @staticmethod
     def get_default() -> list[Certificate]:
@@ -388,31 +478,31 @@ class Certificate(BaseModel):
                 name="AWS Certified Solutions Architect",
                 issuer="",
                 url="https://aws.amazon.com/certification/certified-solutions-architect-associate/",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
             ),
             Certificate(
                 name="Google Cloud Professional Data Engineer",
                 issuer="Google Cloud",
                 url="https://cloud.google.com/certification/data-engineer/",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
             ),
             Certificate(
                 name="Microsoft Certified: Azure Fundamentals",
                 issuer="Microsoft",
                 url="https://learn.microsoft.com/en-us/certifications/azure-fundamentals/",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
             ),
             Certificate(
                 name="Certified Kubernetes Administrator (CKA)",
                 issuer="Linux Foundation",
                 url="",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
             ),
             Certificate(
                 name="Certified Ethical Hacker (CEH)",
                 issuer="",
                 url="https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/",
-                date="2023-05-01",
+                date=datetime.date.fromisoformat("2023-05-01"),
             ),
         ]
 
@@ -423,11 +513,20 @@ class Publication(BaseModel):
     # e.g. IEEE, Computer Magazine
     publisher: str = ""
     # Release date in ISO 8601 format
-    releaseDate: Iso8601 = ""
+    releaseDate: Iso8601 = "Present"
     # e.g. http://www.computer.org.example.com/csdl/mags/co/1996/10/rx069-abs.html
     url: AnyUrl | None = None
     # Short summary of publication
     summary: str = ""
+
+    @staticmethod
+    def get_empty() -> Publication:
+        return Publication(
+            name="",
+            publisher="",
+            url="",
+            summary="",
+        )
 
     @staticmethod
     def get_default() -> list[Publication]:
@@ -435,28 +534,28 @@ class Publication(BaseModel):
             Publication(
                 name="Understanding Quantum Computing",
                 publisher="Springer",
-                releaseDate="2023-05-01",
+                releaseDate=datetime.date.fromisoformat("2023-05-01"),
                 url="https://arxiv.org/abs/quantum-computing",
                 summary="A comprehensive overview of quantum computing principles and applications.",
             ),
             Publication(
                 name="Machine Learning for Beginners",
                 publisher="O'Reilly Media",
-                releaseDate="2023-05-01",
+                releaseDate=datetime.date.fromisoformat("2023-05-01"),
                 url="",
                 summary="",
             ),
             Publication(
                 name="Advanced Algorithms in Python",
                 publisher="Packt Publishing",
-                releaseDate="2023-05-01",
+                releaseDate=datetime.date.fromisoformat("2023-05-01"),
                 url="https://packt.com/advanced-algorithms-python",
                 summary="A deep dive into advanced algorithms and data structures using Python.",
             ),
             Publication(
                 name="Data Science Handbook",
                 publisher="Springer",
-                releaseDate="2023-05-01",
+                releaseDate=datetime.date.fromisoformat("2023-05-01"),
                 url="",
                 summary="A practical guide to data science methodologies and tools.",
             ),
@@ -470,6 +569,14 @@ class Skill(BaseModel):
     level: str = ""
     # List some keywords pertaining to this skill
     keywords: list[str] = []
+
+    @staticmethod
+    def get_empty() -> Skill:
+        return Skill(
+            name="",
+            level="",
+            keywords=[],
+        )
 
     @staticmethod
     def get_default() -> list[Skill]:
@@ -526,6 +633,13 @@ class Language(BaseModel):
     fluency: str = ""
 
     @staticmethod
+    def get_empty() -> Language:
+        return Language(
+            language="",
+            fluency="",
+        )
+
+    @staticmethod
     def get_default() -> list[Language]:
         return [
             Language(language="English", fluency="Native speaker"),
@@ -540,6 +654,13 @@ class Interest(BaseModel):
     name: str = ""
     # List some keywords pertaining to this interest
     keywords: list[str] = []
+
+    @staticmethod
+    def get_empty() -> Interest:
+        return Interest(
+            name="",
+            keywords=[],
+        )
 
     @staticmethod
     def get_default() -> list[Interest]:
@@ -583,6 +704,13 @@ class Reference(BaseModel):
     reference: str = ""
 
     @staticmethod
+    def get_empty() -> Reference:
+        return Reference(
+            name="",
+            reference="",
+        )
+
+    @staticmethod
     def get_default() -> list[Reference]:
         return [
             Reference(
@@ -606,14 +734,14 @@ class Meta(BaseModel):
     # A version field which follows semver - e.g. v1.0.0
     version: str = ""
     # Using ISO 8601 with YYYY-MM-DDThh:mm:ss
-    lastModified: Iso8601 = ""
+    lastModified: datetime.date
 
     @staticmethod
     def get_default() -> Meta:
         return Meta(
             canonical="https://example.com/resume.json",
             version="v1.0.0",
-            lastModified="2023-01-01T12:00:00",
+            lastModified=datetime.datetime.now(),
         )
 
 
@@ -624,6 +752,13 @@ class CustomSection(BaseModel):
 
     title: str = ""
     highlights: list[Highlight] = []
+
+    @staticmethod
+    def get_empty() -> CustomSection:
+        return CustomSection(
+            title="",
+            highlights=[],
+        )
 
     @staticmethod
     def get_default() -> list[CustomSection]:
@@ -671,7 +806,10 @@ class CustomSection(BaseModel):
 
 class Resume(BaseModel):
     # The version of the JSON Resume schema that this document conforms to
-    # json_schema: str = Field(alias="$schema")
+    json_schema: str = Field(
+        default="https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schema.json",
+        alias="$schema",
+    )
     # The basics section of the resume
     basics: Basics
     # The work experience section of the resume
@@ -699,6 +837,25 @@ class Resume(BaseModel):
 
     custom_sections: list[CustomSection] = []
     meta: Meta | None = None
+
+    @staticmethod
+    def get_empty() -> Resume:
+        return Resume(
+            basics=Basics.get_empty(),
+            work=[],
+            volunteer=[],
+            education=[],
+            awards=[],
+            certificates=[],
+            publications=[],
+            skills=[],
+            languages=[],
+            interests=[],
+            references=[],
+            projects=[],
+            custom_sections=[],
+            meta=Meta.get_default(),
+        )
 
     @staticmethod
     def get_default() -> Resume:
