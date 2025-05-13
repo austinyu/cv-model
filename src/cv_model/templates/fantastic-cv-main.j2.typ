@@ -1,4 +1,4 @@
-#import "@preview/fantastic-cv:0.1.0": *
+#import "{{ render_ctx.template_path|replace("\\", "/") }}": *
 
 
 #let name = "{{ resume.basics.name }}"
@@ -220,34 +220,34 @@
 {% endfor %}
 )
 
+
 /*
-[
-  {
-    title: str,
-    highlights: [
-      {
-        summary: str,
-        description: str,
-      }
-    ]
-  }
-]
+custom sections
+{
+  title: str,
+  highlights: [
+    {
+      summary: str,
+      description: str,
+    }
+  ]
+}
 */
-#let custom_sections = (
 {% for custom_section in resume.custom_sections %}
-  (
-    title: "{{ custom_section.title }}",
-    highlights: (
+{% set section_id = custom_section.title|lower|replace(" ", "_") %}
+#let custom_section_{{ section_id }} = (
+  title: "{{ custom_section.title }}",
+  highlights: (
 {% for highlight in custom_section.highlights %}
-      (
-        summary: "{{ highlight.summary }}",
-        description: "{{ highlight.description }}",
-      ),
-{% endfor %}
+    (
+      summary: "{{ highlight.summary }}",
+      description: "{{ highlight.description }}",
     ),
-  ),
 {% endfor %}
+  )
 )
+{% endfor %}
+
 
 #let render_font = "New Computer Modern"
 #let render_size = 10pt
@@ -276,7 +276,7 @@
   space_between_highlight: render_space_between_highlight,
 )
 
-#section_basic_info(
+#render_basic_info(
   name: name,
   location: location,
   email: email,
@@ -285,18 +285,22 @@
   profiles: profiles,
 )
 
-#section_education(educations)
+#render_education(educations)
 
-#section_work(works)
+#render_work(works)
 
-#section_project(projects)
+#render_project(projects)
 
-#section_volunteer(volunteers)
+#render_volunteer(volunteers)
 
-#section_award(awards)
+#render_award(awards)
 
-#section_certificate(certificates)
+#render_certificate(certificates)
 
-#section_publication(publications)
+#render_publication(publications)
 
-#sections_custom(custom_sections)
+{% for custom_section in resume.custom_sections %}
+{% set section_id = custom_section.title|lower|replace(" ", "_") %}
+#render_custom(custom_section_{{ section_id }})
+
+{% endfor %}

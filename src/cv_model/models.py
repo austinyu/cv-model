@@ -1060,3 +1060,7 @@ class Resume(BaseModel):
             custom_sections=CustomSection.get_default(),
             meta=Meta.get_default(),
         )
+
+
+class RenderCtx(BaseModel):
+    template_path: str

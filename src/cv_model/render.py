@@ -7,44 +7,52 @@ import yaml
 import tomllib
 import typst
 
-
+from . import consts
 from . import models
 
 __all__ = ["generate_typ", "generate"]
 
-TEMPLATES_FOLDER = Path(__file__).parent / "templates"
-ENV = Environment(loader=FileSystemLoader(TEMPLATES_FOLDER), trim_blocks=True)
+ENV = Environment(loader=FileSystemLoader(consts.TEMPLATES_FOLDER), trim_blocks=True)
 
-TemplateName = Literal["fantastic-cv"]
 OutputFormat = Literal["typ", "pdf", "str"]
 
 
-def generate_typ(model: models.Resume, template_name: TemplateName) -> str:
-    template = ENV.get_template(f"{template_name}.j2.typ")
-    return template.render({"resume": model})
+def generate_typ(model: models.Resume, template_name: consts.TemplateName) -> str:
+    template = ENV.get_template(consts.TEMPLATE_NAME_MAIN[template_name])
+    render_ctx = models.RenderCtx(template_path=consts.TEMPLATE_NAME_PATH[template_name])
+    return template.render({"resume": model, "render_ctx": render_ctx})
 
-
-@overload
-def generate(src: models.Resume, template_name: TemplateName, output_path: None) -> str: ...
-
-
-@overload
-def generate(src: str, template_name: TemplateName, output_path: None) -> str: ...
-
-@overload
-def generate(src: Path, template_name: TemplateName, output_path: None) -> str: ...
 
 @overload
 def generate(
-    src: models.Resume, template_name: TemplateName, output_path: Path | str
+    src: models.Resume, template_name: consts.TemplateName, output_path: None
+) -> str: ...
+
+
+@overload
+def generate(src: str, template_name: consts.TemplateName, output_path: None) -> str: ...
+
+
+@overload
+def generate(src: Path, template_name: consts.TemplateName, output_path: None) -> str: ...
+
+
+@overload
+def generate(
+    src: models.Resume, template_name: consts.TemplateName, output_path: Path | str
 ) -> None: ...
 
 
 @overload
-def generate(src: str, template_name: TemplateName, output_path: Path | str) -> None: ...
+def generate(
+    src: str, template_name: consts.TemplateName, output_path: Path | str
+) -> None: ...
+
 
 @overload
-def generate(src: Path, template_name: TemplateName, output_path: Path | str) -> None: ...
+def generate(
+    src: Path, template_name: consts.TemplateName, output_path: Path | str
+) -> None: ...
 
 
 def generate(src, template_name, output_path) -> str | None:
