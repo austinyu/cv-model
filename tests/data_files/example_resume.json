@@ -290,10 +290,22 @@
     }
   ],
   "languages": [
-    { "language": "English", "fluency": "Native speaker" },
-    { "language": "Spanish", "fluency": "Conversational" },
-    { "language": "Mandarin", "fluency": "Basic" },
-    { "language": "French", "fluency": "Basic" }
+    {
+      "language": "English",
+      "fluency": "Native speaker"
+    },
+    {
+      "language": "Spanish",
+      "fluency": "Conversational"
+    },
+    {
+      "language": "Mandarin",
+      "fluency": "Basic"
+    },
+    {
+      "language": "French",
+      "fluency": "Basic"
+    }
   ],
   "interests": [
     {
@@ -349,11 +361,19 @@
         "Collaborated with a team of contributors to address bugs and optimize performance, reducing load times by 40%.",
         "Coordinated with college administrators to ensure accurate and timely release of course data."
       ],
-      "keywords": ["React", "TypeScript", "MongoDB", "Git"],
+      "keywords": [
+        "React",
+        "TypeScript",
+        "MongoDB",
+        "Git"
+      ],
       "startDate": "2022-01-01",
       "endDate": "Present",
       "url": "https://hyperschedule.io",
-      "roles": ["Individual Contributor", "Maintainer"],
+      "roles": [
+        "Individual Contributor",
+        "Maintainer"
+      ],
       "entity": "Claremont Colleges",
       "type": "application",
       "source_code": "https://github.com/hyperschedule"
@@ -366,11 +386,19 @@
         "Optimized backend systems to handle peak traffic during registration periods, ensuring system stability.",
         "Provided technical support and documentation to assist users and administrators with platform usage."
       ],
-      "keywords": ["React", "Node.js", "PostgreSQL", "Git"],
+      "keywords": [
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Git"
+      ],
       "startDate": "2021-09-01",
       "endDate": "2022-12-01",
       "url": "",
-      "roles": ["Individual Contributor", "Maintainer"],
+      "roles": [
+        "Individual Contributor",
+        "Maintainer"
+      ],
       "entity": "Claremont Colleges",
       "type": "application",
       "source_code": "https://github.com/claremont-colleges"
@@ -388,7 +416,10 @@
           "summary": "Frameworks",
           "description": "React, Node.js, Express, Flask, Django"
         },
-        { "summary": "Databases", "description": "MySQL, MongoDB, PostgreSQL" },
+        {
+          "summary": "Databases",
+          "description": "MySQL, MongoDB, PostgreSQL"
+        },
         {
           "summary": "Tools",
           "description": "Git, Docker, Kubernetes, AWS, GCP"
@@ -416,6 +447,6 @@
   "meta": {
     "canonical": "https://example.com/resume.json",
     "version": "v1.0.0",
-    "lastModified": "2025-05-12"
+    "lastModified": "2025-05-13"
   }
 }

@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Literal, overload
+import shutil
 
 from jinja2 import Environment, FileSystemLoader
 import ujson5
@@ -17,56 +18,50 @@ ENV = Environment(loader=FileSystemLoader(consts.TEMPLATES_FOLDER), trim_blocks=
 OutputFormat = Literal["typ", "pdf", "str"]
 
 
-def generate_typ(model: models.Resume, template_name: consts.TemplateName) -> str:
+def generate_typ(
+    model: models.Resume, template_name: consts.TemplateName, output_path: Path | str
+) -> None:
+    _output_path = Path(output_path)
     template = ENV.get_template(consts.TEMPLATE_NAME_MAIN[template_name])
-    render_ctx = models.RenderCtx(template_path=consts.TEMPLATE_NAME_PATH[template_name])
-    return template.render({"resume": model, "render_ctx": render_ctx})
+    render_ctx = models.RenderCtx(template_name=consts.TEMPLATE_NAME_IMPORT[template_name])
+    with open(_output_path, "w", encoding="utf-8") as f:
+        f.write(template.render({"resume": model, "render_ctx": render_ctx}))
+    shutil.copy(
+        consts.TEMPLATES_FOLDER / consts.TEMPLATE_NAME_IMPORT[template_name],
+        _output_path.parent,
+    )
 
 
 @overload
 def generate(
-    src: models.Resume, template_name: consts.TemplateName, output_path: None
-) -> str: ...
-
-
-@overload
-def generate(src: str, template_name: consts.TemplateName, output_path: None) -> str: ...
-
-
-@overload
-def generate(src: Path, template_name: consts.TemplateName, output_path: None) -> str: ...
-
-
-@overload
-def generate(
-    src: models.Resume, template_name: consts.TemplateName, output_path: Path | str
+    src: models.Resume, output_path: Path | str, template_name: consts.TemplateName
 ) -> None: ...
 
 
 @overload
 def generate(
-    src: str, template_name: consts.TemplateName, output_path: Path | str
+    src: str, output_path: Path | str, template_name: consts.TemplateName
 ) -> None: ...
 
 
 @overload
 def generate(
-    src: Path, template_name: consts.TemplateName, output_path: Path | str
+    src: Path,
+    output_path: Path | str,
+    template_name: consts.TemplateName,
 ) -> None: ...
 
 
-def generate(src, template_name, output_path) -> str | None:
+def generate(src, output_path, template_name) -> None:
     """Generate a CV from a JSON, YAML, or TOML string or file path.
     Args:
         src: The source JSON, YAML, or TOML string or file path.
+        output_path: The output file path.
         template_name: The name of the template to use.
-        output_path: The output file path. If None, return the generated typ string.
-    Returns:
-        str | None: The generated typ string if output_path is None, otherwise None.
     """
     path_maybe = Path(src)
     if path_maybe.exists():
-        return generate(path_maybe.read_text(), template_name, output_path)
+        return generate(path_maybe.read_text(encoding="utf-8"), output_path, template_name)
     parsed_content = None
     try:
         parsed_content = ujson5.loads(src)
@@ -90,32 +85,29 @@ def generate(src, template_name, output_path) -> str | None:
 
     model = models.Resume.model_validate(parsed_content)
 
-    if output_path is None:
-        return generate_typ(model, template_name)
+    _output_path = Path(output_path)
+    suffix = _output_path.name.split(".")[-1]
+    _output_path.parent.mkdir(parents=True, exist_ok=True)
+    if suffix == "typ":
+        generate_typ(model, template_name, _output_path)
+    elif suffix in ["pdf", "svg", "png", "html"]:
+        # Create a temporary file with a guaranteed unique name
+        # with tempfile.NamedTemporaryFile(suffix=".typ", delete=False) as temp_file:
+        #     temp_path = Path(temp_file.name)
+        #     temp_file.write(generate_typ(model, template_name).encode('utf-8'))
+        temp_path = _output_path.with_suffix(".typ")
+        template_path = output_path.parent / consts.TEMPLATE_NAME_IMPORT[template_name]
+        generate_typ(model, template_name, temp_path)
+        try:
+            # File is already closed from the with block
+            typst.compile(str(temp_path), str(output_path), format=suffix)  # type: ignore
+        finally:
+            temp_path.unlink()
+            template_path.unlink()
     else:
-        _output_path = Path(output_path)
-        suffix = _output_path.name.split(".")[-1]
-        _output_path.parent.mkdir(parents=True, exist_ok=True)
-        if suffix == "typ":
-            with open(_output_path, "w", encoding="utf-8") as f:
-                f.write(generate_typ(model, template_name))
-        elif suffix in ["pdf", "svg", "png", "html"]:
-            # Create a temporary file with a guaranteed unique name
-            # with tempfile.NamedTemporaryFile(suffix=".typ", delete=False) as temp_file:
-            #     temp_path = Path(temp_file.name)
-            #     temp_file.write(generate_typ(model, template_name).encode('utf-8'))
-            temp_path = _output_path.with_suffix(".typ")
-            with open(temp_path, "w", encoding="utf-8") as f:
-                f.write(generate_typ(model, template_name))
-            try:
-                # File is already closed from the with block
-                typst.compile(str(temp_path), str(output_path), format=suffix)  # type: ignore
-            finally:
-                temp_path.unlink()
-        else:
-            raise ValueError(
-                "output_path must end with typ, pdf, svg, png, or html. "
-                + f"Got: {_output_path.name}"
-            )
+        raise ValueError(
+            "output_path must end with typ, pdf, svg, png, or html. "
+            + f"Got: {_output_path.name}"
+        )
 
     return None

@@ -1063,4 +1063,4 @@ class Resume(BaseModel):
 
 
 class RenderCtx(BaseModel):
-    template_path: str
+    template_name: str

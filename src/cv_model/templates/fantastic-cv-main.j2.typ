@@ -1,4 +1,4 @@
-#import "{{ render_ctx.template_path|replace("\\", "/") }}": *
+#import "{{ render_ctx.template_name }}": *
 
 
 #let name = "{{ resume.basics.name }}"
