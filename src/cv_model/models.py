@@ -1,6 +1,6 @@
 from __future__ import annotations
 import datetime
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -16,6 +16,10 @@ HIGHLIGHT_DESCRIPTION = (
 )
 
 
+def build_description(description: str) -> Any:
+    return {"description": description}
+
+
 class Basics(BaseModel):
     class Location(BaseModel):
         address: str = ""
@@ -23,38 +27,38 @@ class Basics(BaseModel):
         city: str = ""
         countryCode: str = Field(
             default="",
-            json_schema_extra={"description": "ISO-3166-1 ALPHA-2, e.g. US, AU, IN"},
+            json_schema_extra=build_description("ISO-3166-1 ALPHA-2, e.g. US, AU, IN"),
         )
         region: State = Field(
             default="",
-            json_schema_extra={"description": "ISO-3166-2, e.g. CA, NY, ON, BC, etc."},
+            json_schema_extra=build_description("ISO-3166-2, e.g. CA, NY, ON, BC, etc."),
         )
 
     class Profiles(BaseModel):
         # e.g. Facebook or Twitter
         network: str = Field(
             default="",
-            json_schema_extra={"description": "e.g. Facebook or Twitter"},
+            json_schema_extra=build_description("e.g. Facebook or Twitter"),
         )
         username: str = Field(
             default="",
-            json_schema_extra={"description": "a unique identifier for the user"},
+            json_schema_extra=build_description("a unique identifier for the user"),
         )
         url: AnyUrl | None = Field(
             default=None,
-            json_schema_extra={"description": "full URL to the profile"},
+            json_schema_extra=build_description("full URL to the profile"),
         )
 
     name: str = ""
     # e.g. Web Developer
     label: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. Web Developer"},
+        json_schema_extra=build_description("e.g. Web Developer"),
     )
     # URL (as per RFC 3986) to a image in JPEG or PNG format
     image: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL to a image in JPEG or PNG format"},
+        json_schema_extra=build_description("URL to a image in JPEG or PNG format"),
     )
     # e.g. thomas@gmail.com
     email: str = ""
@@ -71,7 +75,7 @@ class Basics(BaseModel):
     # URL (as per RFC 3986) to your website, e.g. personal homepage
     url: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL to your website, e.g. personal homepage"},
+        json_schema_extra=build_description("URL to your website, e.g. personal homepage"),
     )
     # Write a short 2-3 sentence biography about yourself
     summary: str = Field(
@@ -127,12 +131,12 @@ class Education(BaseModel):
     # e.g. Massachusetts Institute of Technology
     institution: str = Field(
         default="",
-        json_schema_extra={"description": "University or college name"},
+        json_schema_extra=build_description("University or college name"),
     )
     location: str = ""
     url: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL to the university or college"},
+        json_schema_extra=build_description("URL to the university or college"),
     )
     # e.g. Arts
     area: str = Field(
@@ -152,17 +156,17 @@ class Education(BaseModel):
     # Start date in ISO 8601 format
     startDate: Iso8601 = Field(
         default="Present",
-        json_schema_extra={"description": DATE_DESCRIPTION},
+        json_schema_extra=build_description(DATE_DESCRIPTION),
     )
     # End date in ISO 8601 format
     endDate: Iso8601 = Field(
         default="Present",
-        json_schema_extra={"description": DATE_DESCRIPTION},
+        json_schema_extra=build_description(DATE_DESCRIPTION),
     )
     # Grade point average, e.g. 3.67/4.0
     score: str = Field(
         default="",
-        json_schema_extra={"description": "Grade point average, e.g. 3.67/4.0. "},
+        json_schema_extra=build_description("Grade point average, e.g. 3.67/4.0. "),
     )
     # List notable courses/subjects
     courses: list[str] = Field(
@@ -227,11 +231,11 @@ class Education(BaseModel):
 class Work(BaseModel):
     name: str = Field(
         default="",
-        json_schema_extra={"description": "Company name e.g. Facebook"},
+        json_schema_extra=build_description("Company name e.g. Facebook"),
     )
     location: str = Field(
         default="",
-        json_schema_extra={"description": "Location of the company. e.g. Menlo Park, CA."},
+        json_schema_extra=build_description("Location of the company. e.g. Menlo Park, CA."),
     )
     description: str = Field(
         default="",
@@ -240,26 +244,26 @@ class Work(BaseModel):
         },
     )
     position: str = Field(
-        default="", json_schema_extra={"description": "Job title e.g. Software Engineer"}
+        default="", json_schema_extra=build_description("Job title e.g. Software Engineer")
     )
     url: AnyUrl | None = Field(
-        default=None, json_schema_extra={"description": "URL to the company website."}
+        default=None, json_schema_extra=build_description("URL to the company website.")
     )
     startDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     endDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     # Overview of responsibilities at the company
     summary: str = Field(
         default="",
-        json_schema_extra={"description": "Overview of responsibilities at the company"},
+        json_schema_extra=build_description("Overview of responsibilities at the company"),
     )
     # Specify multiple accomplishments
     highlights: list[str] = Field(
         default=[],
-        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+        json_schema_extra=build_description(HIGHLIGHT_DESCRIPTION),
     )
 
     @staticmethod
@@ -322,13 +326,13 @@ class Work(BaseModel):
 
 
 class Project(BaseModel):
-    name: str = Field(default="", json_schema_extra={"description": "Project name"})
+    name: str = Field(default="", json_schema_extra=build_description("Project name"))
     description: str = Field(
-        default="", json_schema_extra={"description": "A short description of the project"}
+        default="", json_schema_extra=build_description("A short description of the project")
     )
     highlights: list[str] = Field(
         default=[],
-        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+        json_schema_extra=build_description(HIGHLIGHT_DESCRIPTION),
     )
     keywords: list[str] = Field(
         default=[],
@@ -337,14 +341,14 @@ class Project(BaseModel):
         },
     )
     startDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     endDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     url: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL to the project preview"},
+        json_schema_extra=build_description("URL to the project preview"),
     )
     roles: list[str] = Field(
         default=[],
@@ -429,35 +433,37 @@ class Volunteer(BaseModel):
     # e.g. Facebook
     organization: str = Field(
         default="",
-        json_schema_extra={"description": "Organization name e.g. SF SPCA"},
+        json_schema_extra=build_description("Organization name e.g. SF SPCA"),
     )
     # e.g. Software Engineer
     position: str = Field(
         default="",
-        json_schema_extra={"description": "Position title e.g. Animal Care Volunteer"},
+        json_schema_extra=build_description("Position title e.g. Animal Care Volunteer"),
     )
     # e.g. http://facebook.example.com
     url: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL to the organization"},
+        json_schema_extra=build_description("URL to the organization"),
     )
     # Start date in ISO 8601 format
     startDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     # End date in ISO 8601 format
     endDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     # Overview of responsibilities at the organization
     summary: str = Field(
         default="",
-        json_schema_extra={"description": "Overview of responsibilities at the organization"},
+        json_schema_extra=build_description(
+            "Overview of responsibilities at the organization"
+        ),
     )
     # Specify multiple accomplishments
     highlights: list[str] = Field(
         default=[],
-        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+        json_schema_extra=build_description(HIGHLIGHT_DESCRIPTION),
     )
     location: str = ""
 
@@ -503,16 +509,20 @@ class Award(BaseModel):
     # e.g. One of the 100 greatest minds of the century
     title: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. One of the 100 greatest minds of the century"},
+        json_schema_extra=build_description(
+            "e.g. One of the 100 greatest minds of the century"
+        ),
     )
     url: AnyUrl | None = Field(
         default=None,
-        json_schema_extra={"description": "URL (as per RFC 3986) to the award or recognition"},
+        json_schema_extra=build_description(
+            "URL (as per RFC 3986) to the award or recognition"
+        ),
     )
     # Date in ISO 8601 format
     date: Iso8601 = Field(
         default="Present",
-        json_schema_extra={"description": DATE_DESCRIPTION},
+        json_schema_extra=build_description(DATE_DESCRIPTION),
     )
     # e.g. Time Magazine
     awarder: str = Field(
@@ -569,11 +579,11 @@ class Award(BaseModel):
 class Certificate(BaseModel):
     name: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. AWS Certified Solutions Architect"},
+        json_schema_extra=build_description("e.g. AWS Certified Solutions Architect"),
     )
     date: Iso8601 = Field(
         default="Present",
-        json_schema_extra={"description": DATE_DESCRIPTION},
+        json_schema_extra=build_description(DATE_DESCRIPTION),
     )
     url: AnyUrl | None = Field(
         default=None,
@@ -632,16 +642,16 @@ class Publication(BaseModel):
     # e.g. The World Wide Web
     name: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. The World Wide Web"},
+        json_schema_extra=build_description("e.g. The World Wide Web"),
     )
     # e.g. IEEE, Computer Magazine
     publisher: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. IEEE, Computer Magazine"},
+        json_schema_extra=build_description("e.g. IEEE, Computer Magazine"),
     )
     # Release date in ISO 8601 format
     releaseDate: Iso8601 = Field(
-        default="Present", json_schema_extra={"description": DATE_DESCRIPTION}
+        default="Present", json_schema_extra=build_description(DATE_DESCRIPTION)
     )
     url: AnyUrl | None = None
     summary: str = ""
@@ -692,7 +702,7 @@ class Publication(BaseModel):
 class Skill(BaseModel):
     name: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. Web Development"},
+        json_schema_extra=build_description("e.g. Web Development"),
     )
     level: str = Field(
         default="",
@@ -855,7 +865,7 @@ class Reference(BaseModel):
     # e.g. Timothy Cook
     name: str = Field(
         default="",
-        json_schema_extra={"description": "e.g. Timothy Cook, Bill Gates, Elon Musk, etc."},
+        json_schema_extra=build_description("e.g. Timothy Cook, Bill Gates, Elon Musk, etc."),
     )
     reference: str = Field(
         default="",
@@ -910,7 +920,7 @@ class CustomSection(BaseModel):
     class Highlight(BaseModel):
         summary: str = Field(
             default="",
-            json_schema_extra={"description": "A short summary of the highlight."},
+            json_schema_extra=build_description("A short summary of the highlight."),
         )
         description: str = Field(
             default="",
@@ -925,7 +935,7 @@ class CustomSection(BaseModel):
     title: str = ""
     highlights: list[Highlight] = Field(
         default=[],
-        json_schema_extra={"description": HIGHLIGHT_DESCRIPTION},
+        json_schema_extra=build_description(HIGHLIGHT_DESCRIPTION),
     )
 
     @staticmethod
@@ -983,59 +993,61 @@ class Resume(BaseModel):
     )
     basics: Basics = Field(
         default=Basics.get_empty(),
-        json_schema_extra={"description": "The basics section of the resume."}
+        json_schema_extra=build_description("The basics section of the resume."),
     )
     work: list[Work] = Field(
         default=[],
-        json_schema_extra={"description": "The work experience section of the resume."},
+        json_schema_extra=build_description("The work experience section of the resume."),
     )
     volunteer: list[Volunteer] = Field(
         default=[],
-        json_schema_extra={"description": "The volunteer experience section of the resume"},
+        json_schema_extra=build_description("The volunteer experience section of the resume"),
     )
     education: list[Education] = Field(
         default=[],
-        json_schema_extra={"description": "The education section of the resume"},
+        json_schema_extra=build_description("The education section of the resume"),
     )
     awards: list[Award] = Field(
         default=[],
-        json_schema_extra={"description": "The awards section of the resume"},
+        json_schema_extra=build_description("The awards section of the resume"),
     )
     certificates: list[Certificate] = Field(
         default=[],
-        json_schema_extra={"description": "The certificates section of the resume"},
+        json_schema_extra=build_description("The certificates section of the resume"),
     )
     publications: list[Publication] = Field(
         default=[],
-        json_schema_extra={"description": "The publications section of the resume"},
+        json_schema_extra=build_description("The publications section of the resume"),
     )
     skills: list[Skill] = Field(
         default=[],
-        json_schema_extra={"description": "The skills section of the resume"},
+        json_schema_extra=build_description("The skills section of the resume"),
     )
     languages: list[Language] = Field(
         default=[],
-        json_schema_extra={"description": "The languages section of the resume"},
+        json_schema_extra=build_description("The languages section of the resume"),
     )
     interests: list[Interest] = Field(
         default=[],
-        json_schema_extra={"description": "The interests section of the resume"},
+        json_schema_extra=build_description("The interests section of the resume"),
     )
     references: list[Reference] = Field(
         default=[],
-        json_schema_extra={"description": "The references section of the resume"},
+        json_schema_extra=build_description("The references section of the resume"),
     )
     projects: list[Project] = Field(
         default=[],
-        json_schema_extra={"description": "The projects section of the resume"},
+        json_schema_extra=build_description("The projects section of the resume"),
     )
     custom_sections: list[CustomSection] = Field(
         default=[],
-        json_schema_extra={"description": "The custom sections of the resume"},
+        json_schema_extra=build_description("The custom sections of the resume"),
     )
     meta: Meta | None = Field(
         default=None,
-        json_schema_extra={"description": "The meta section of the resume. This is optional."},
+        json_schema_extra=build_description(
+            "The meta section of the resume. This is optional."
+        ),
     )
 
     @staticmethod
@@ -1062,5 +1074,232 @@ class Resume(BaseModel):
         )
 
 
+PaperSize = Literal[
+    "a0",
+    "a1",
+    "a2",
+    "a3",
+    "a4",
+    "a5",
+    "a6",
+    "a7",
+    "a8",
+    "a9",
+    "a10",
+    "a11",
+    "iso-b1",
+    "iso-b2",
+    "iso-b3",
+    "iso-b4",
+    "iso-b5",
+    "iso-b6",
+    "iso-b7",
+    "iso-b8",
+    "iso-c3",
+    "iso-c4",
+    "iso-c5",
+    "iso-c6",
+    "iso-c7",
+    "iso-c8",
+    "din-d3",
+    "din-d4",
+    "din-d5",
+    "din-d6",
+    "din-d7",
+    "din-d8",
+    "sis-g5",
+    "sis-e5",
+    "ansi-a",
+    "ansi-b",
+    "ansi-c",
+    "ansi-d",
+    "ansi-e",
+    "arch-a",
+    "arch-b",
+    "arch-c",
+    "arch-d",
+    "arch-e1",
+    "arch-e",
+    "jis-b0",
+    "jis-b1",
+    "jis-b2",
+    "jis-b3",
+    "jis-b4",
+    "jis-b5",
+    "jis-b6",
+    "jis-b7",
+    "jis-b8",
+    "jis-b9",
+    "jis-b10",
+    "jis-b11",
+    "sac-d0",
+    "sac-d1",
+    "sac-d2",
+    "sac-d3",
+    "sac-d4",
+    "sac-d5",
+    "sac-d6",
+    "iso-id-1",
+    "iso-id-2",
+    "iso-id-3",
+    "asia-f4",
+    "jp-shiroku-ban-4",
+    "jp-shiroku-ban-5",
+    "jp-shiroku-ban-6",
+    "jp-kiku-4",
+    "jp-kiku-5",
+    "jp-business-card",
+    "cn-business-card",
+    "eu-business-card",
+    "fr-tellière",
+    "fr-couronne-écriture",
+    "fr-couronne-édition",
+    "fr-raisin",
+    "fr-carré",
+    "fr-jésus",
+    "uk-brief",
+    "uk-draft",
+    "uk-foolscap",
+    "uk-quarto",
+    "uk-crown",
+    "uk-book-a",
+    "uk-book-b",
+    "us-letter",
+    "us-legal",
+    "us-tabloid",
+    "us-executive",
+    "us-foolscap-folio",
+    "us-statement",
+    "us-ledger",
+    "us-oficio",
+    "us-gov-letter",
+    "us-gov-legal",
+    "us-business-card",
+    "us-digest",
+    "us-trade",
+    "newspaper-compact",
+    "newspaper-berliner",
+    "newspaper-broadsheet",
+    "presentation-16-9",
+    "presentation-4-3",
+]
+
+
+class RenderMargins(BaseModel):
+    top: float
+    bottom: float
+    left: float
+    right: float
+
+
+PageNumbering = Literal["none", "1 / 1", "1"]
+FontFamily = Literal[
+    "New Computer Modern",
+    "Times New Roman",
+    "Arial",
+]
+
+DefaultSection = Literal[
+    "work",
+    "volunteer",
+    "education",
+    "awards",
+    "certificates",
+    "publications",
+    "projects",
+]
+
+DEFAULT_SECTIONS = [
+    "work",
+    "volunteer",
+    "education",
+    "awards",
+    "certificates",
+    "publications",
+    "projects",
+]
+
+COLOR_DESCRIPTION = "Color in hex format. e.g. #000000"
+
 class RenderCtx(BaseModel):
-    template_name: str
+    page_size: PaperSize = Field(
+        default="a4",
+        json_schema_extra=build_description(
+            "The paper size to use for the document. "
+            + "See https://typst.app/docs/reference/layout/page/#parameters-paper for "
+            + "a list of available sizes."
+        ),
+    )
+    page_margin: RenderMargins = Field(
+        default=RenderMargins(top=0.5, bottom=0.5, left=0.5, right=0.5),
+        json_schema_extra=build_description(
+            "The margins in inches in the order (top, bottom, left, right)."
+        ),
+    )
+    page_numbering: PageNumbering = Field(
+        default="none",
+        json_schema_extra=build_description(
+            "The page numbering style to use for the document."
+        ),
+    )
+
+    font_family: FontFamily = Field(default="New Computer Modern")
+    font_size: int = Field(default=12, json_schema_extra=build_description("Font size in pt."))
+    text_color: str = Field(
+        default="#000000",
+        json_schema_extra=build_description(
+            "The default color to use for the document. " + COLOR_DESCRIPTION
+        ),
+    )
+    name_color: str = Field(
+        default="#000000",
+        json_schema_extra=build_description(
+            "The color to use for the main name in the document. " + COLOR_DESCRIPTION
+        ),
+    )
+    section_title_color: str = Field(
+        default="#26428b",
+        json_schema_extra=build_description(
+            "The color to use for the section titles in the document. " + COLOR_DESCRIPTION
+        ),
+    )
+    entry_title_color: str = Field(
+        default="#26428b",
+        json_schema_extra=build_description(
+            "The color to use for the entry titles in the document. " + COLOR_DESCRIPTION
+        ),
+    )
+    link_color: str = Field(
+        default="#26428b",
+        json_schema_extra=build_description(
+            "The color to use for the links in the document. " + COLOR_DESCRIPTION
+        ),
+    )
+
+    highlight_spacing: float = Field(
+        default=-0.5,
+        json_schema_extra=build_description("The spacing between the highlight items in em."),
+    )
+    entry_spacing: float = Field(
+        default=-0.5,
+        json_schema_extra=build_description("The spacing between the entry items in em."),
+    )
+    section_spacing: float = Field(
+        default=-0.5,
+        json_schema_extra=build_description("The spacing between the section items in em."),
+    )
+
+    section_order: list[DefaultSection | str] = Field(
+        default=[
+            "education",
+            "work",
+            "projects",
+            "volunteer",
+            "awards",
+            "certificates",
+            "publications",
+        ],
+        json_schema_extra=build_description(
+            "The order of the sections to render in the document."
+        ),
+    )
