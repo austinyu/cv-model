@@ -18,15 +18,15 @@ def generate_test_files():
     """Generate test files for the Resume model."""
     # Generate valid resume
     with open(DATA_FILES_FOLDER / "example_resume.json", "w", encoding="utf-8") as f:
-        f.write(cv_model.Resume.get_default().model_dump_json(by_alias=True, indent=2))
+        f.write(cv_model.models.get_default_resume().model_dump_json(by_alias=True, indent=2))
     print(f"json file generated at {DATA_FILES_FOLDER / 'example_resume.json'}")
     with open(DATA_FILES_FOLDER / "example_resume.yaml", "w", encoding="utf-8") as f:
         yaml.dump(
-            cv_model.Resume.get_default().model_dump(by_alias=True), f, allow_unicode=True
+            cv_model.models.get_default_resume().model_dump(by_alias=True), f, allow_unicode=True
         )
     print(f"yaml file generated at {DATA_FILES_FOLDER / 'example_resume.yaml'}")
     with open(DATA_FILES_FOLDER / "example_resume.toml", "w", encoding="utf-8") as f:
-        toml.dump(cv_model.Resume.get_default().model_dump(by_alias=True), f)
+        toml.dump(cv_model.models.get_default_resume().model_dump(by_alias=True), f)
     print(f"toml file generated at {DATA_FILES_FOLDER / 'example_resume.toml'}")
 
 if __name__ == "__main__":

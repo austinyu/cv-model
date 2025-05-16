@@ -1,3 +1,5 @@
+from importlib.metadata import PackageNotFoundError, version
+
 __all__ = [
     "Resume",
     "RenderCtx",
@@ -19,3 +21,8 @@ from .utils import (
     dump_empty_yaml,
     dump_empty_toml,
 )
+
+try:
+    __version__ = version("impypeshw")
+except PackageNotFoundError:
+    __version__ = "unknown"

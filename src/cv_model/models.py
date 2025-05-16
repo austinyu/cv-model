@@ -5,6 +5,8 @@ import re
 
 from pydantic import BaseModel, Field, computed_field
 
+from cv_model import consts
+
 Iso8601 = datetime.date | Literal["Present"]
 
 State = str  # two character abbreviation for US states, e.g. CA, NY
@@ -20,6 +22,7 @@ HIGHLIGHT_DESCRIPTION = (
 def build_description(description: str) -> Any:
     return {"description": description}
 
+
 # support bold, italic, code, link
 def markdown_to_typst(text: str) -> str:
     """
@@ -32,27 +35,28 @@ def markdown_to_typst(text: str) -> str:
         A string with markdown syntax converted to typst syntax
     """
     # Handle links
-    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'#link("\2")[\1]', text)
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'#link("\2")[\1]', text)
 
     # Handle bold and italic combined: ***text*** -> *_text_*
-    text = re.sub(r'\*\*\*([^*]+?)\*\*\*', r'__COMBINED_START__\1__COMBINED_END__', text)
+    text = re.sub(r"\*\*\*([^*]+?)\*\*\*", r"__COMBINED_START__\1__COMBINED_END__", text)
 
     # Handle bold with ** (using a temporary marker that won't be affected by other replacements)
-    text = re.sub(r'\*\*([^*]+?)\*\*', r'__BOLD_START__\1__BOLD_END__', text)
+    text = re.sub(r"\*\*([^*]+?)\*\*", r"__BOLD_START__\1__BOLD_END__", text)
 
     # Handle italic with *
-    text = re.sub(r'\*([^*]+?)\*', r'_\1_', text)
+    text = re.sub(r"\*([^*]+?)\*", r"_\1_", text)
 
     # Restore bold markers to typst bold syntax
-    text = text.replace('__BOLD_START__', '*').replace('__BOLD_END__', '*')
+    text = text.replace("__BOLD_START__", "*").replace("__BOLD_END__", "*")
 
     # Restore combined bold+italic markers to typst syntax
-    text = text.replace('__COMBINED_START__', '*_').replace('__COMBINED_END__', '_*')
+    text = text.replace("__COMBINED_START__", "*_").replace("__COMBINED_END__", "_*")
 
     # Handle code
-    text = re.sub(r'`([^`]+?)`', r'`\1`', text)
+    text = re.sub(r"`([^`]+?)`", r"`\1`", text)
 
     return text
+
 
 class Basics(BaseModel):
     class Location(BaseModel):
@@ -542,7 +546,7 @@ class Meta(BaseModel):
     # A version field which follows semver - e.g. v1.0.0
     version: str = ""
     # Using ISO 8601 with YYYY-MM-DDThh:mm:ss
-    lastModified: datetime.date
+    lastModified: str
 
 
 class CustomSection(BaseModel):
@@ -584,7 +588,7 @@ class CustomSection(BaseModel):
 
 class Resume(BaseModel):
     json_schema: str = Field(
-        default="https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schema.json",
+        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/{consts.RESUME_SCHEMA_NAME}",
         alias="$schema",
     )
     basics: Basics = Field(
@@ -648,7 +652,26 @@ class Resume(BaseModel):
 
     @staticmethod
     def get_empty() -> Resume:
-        return Resume()
+        return Resume(
+            basics=Basics.get_empty(),
+            work=[Work.get_empty()],
+            volunteer=[Volunteer.get_empty()],
+            education=[Education.get_empty()],
+            awards=[Award.get_empty()],
+            certificates=[Certificate.get_empty()],
+            publications=[Publication.get_empty()],
+            skills=[Skill.get_empty()],
+            languages=[Language.get_empty()],
+            interests=[Interest.get_empty()],
+            references=[Reference.get_empty()],
+            projects=[Project.get_empty()],
+            custom_sections=[CustomSection.get_empty()],
+            meta=Meta(
+                canonical="",
+                version="",
+                lastModified=datetime.date.today().isoformat(),
+            ),
+        )
 
 
 PaperSize = Literal[
@@ -800,6 +823,10 @@ COLOR_DESCRIPTION = "Color in hex format. e.g. #000000"
 
 
 class RenderCtx(BaseModel):
+    json_schema: str = Field(
+        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/{consts.CTX_SCHEMA_NAME}",
+        alias="$schema",
+    )
     page_size: PaperSize = Field(
         default="a4",
         json_schema_extra=build_description(
@@ -1300,9 +1327,10 @@ DEFAULT_RESUME = Resume(
     meta=Meta(
         canonical="https://example.com/resume.json",
         version="v1.0.0",
-        lastModified=datetime.datetime.now().date(),
+        lastModified=datetime.datetime.now().date().isoformat(),
     ),
 )
+
 
 def get_default_resume() -> Resume:
     return DEFAULT_RESUME

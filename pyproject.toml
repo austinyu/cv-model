@@ -27,7 +27,7 @@ name = "Austin Yu"
 email = "yuxm.austin1023@gmail.com"
 
 [project.scripts]
-cvmodel = "cv_model.cli:main"
+cvmodel = "cv_model.cli:app"
 
 
 [dependency-groups]

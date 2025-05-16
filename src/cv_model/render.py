@@ -60,8 +60,14 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
     """Generate a CV from a JSON, YAML, or TOML string or file path.
     Args:
         src: The source JSON, YAML, or TOML string or file path.
-        output_path: The output file path.
+        output_path: The output file path. Could be one of the following formats:
+            - typ: Typst file
+            - pdf: PDF file
+            - svg: SVG file
+            - png: PNG file
+            - html: HTML file
         template_name: The name of the template to use.
+        render_ctx: The render context to use.
     """
     path_maybe = Path(src)
     if path_maybe.exists():

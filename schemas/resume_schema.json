@@ -815,7 +815,7 @@
   },
   "properties": {
     "$schema": {
-      "default": "https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schema.json",
+      "default": "https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/resume_schema.json",
       "title": "$Schema",
       "type": "string"
     },
