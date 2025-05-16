@@ -1,6 +1,7 @@
 __all__ = [
     "Resume",
     "RenderCtx",
+    "get_default_resume",
     "generate_typ",
     "generate",
     "dump_empty_json",
@@ -8,7 +9,7 @@ __all__ = [
     "dump_empty_toml",
 ]
 
-from .models import Resume, RenderCtx
+from .models import Resume, RenderCtx, get_default_resume
 from .render import (
     generate_typ,
     generate,

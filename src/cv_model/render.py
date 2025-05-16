@@ -101,18 +101,36 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
                 + "Please check the section order."
             )
 
+    generate_from_model(
+        model=model,
+        output_path=output_path,
+        template_name=template_name,
+        render_ctx=render_ctx,
+    )
+
+
+def generate_from_model(
+    model: models.Resume, output_path: str | Path, template_name: consts.TemplateName, render_ctx
+) -> None:
+
+    custom_section_titles = [section.title for section in model.custom_sections]
+    for section_name in render_ctx.section_order:
+        if section_name in models.DEFAULT_SECTIONS:
+            continue
+        if section_name not in custom_section_titles:
+            raise ValueError(
+                f"Section '{section_name}' not found in the resume model. "
+                + "Please check the section order."
+            )
+
     _output_path = Path(output_path)
     suffix = _output_path.name.split(".")[-1]
     _output_path.parent.mkdir(parents=True, exist_ok=True)
     if suffix == "typ":
         generate_typ(model, template_name, _output_path, render_ctx)
     elif suffix in ["pdf", "svg", "png", "html"]:
-        # Create a temporary file with a guaranteed unique name
-        # with tempfile.NamedTemporaryFile(suffix=".typ", delete=False) as temp_file:
-        #     temp_path = Path(temp_file.name)
-        #     temp_file.write(generate_typ(model, template_name).encode('utf-8'))
         temp_path = _output_path.with_suffix(".typ")
-        generate_typ(model, template_name, temp_path)
+        generate_typ(model, template_name, temp_path, render_ctx)
         try:
             # File is already closed from the with block
             typst.compile(str(temp_path), str(output_path), format=suffix)  # type: ignore
@@ -123,5 +141,3 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
             "output_path must end with typ, pdf, svg, png, or html. "
             + f"Got: {_output_path.name}"
         )
-
-    return None

@@ -15,15 +15,20 @@ classifiers = []
 dependencies = [
     "jinja2>=3.1.6",
     "pydantic>=2.11.4",
+    "typer>=0.15.4",
 ]
 dynamic = []
 [[project.authors]]
 name = "Austin Yu"
-email = "austinyu@stanford.edu"
+email = "yuxm.austin1023@gmail.com"
 
 [[project.maintainers]]
 name = "Austin Yu"
-email = "austinyu@stanford.edu"
+email = "yuxm.austin1023@gmail.com"
+
+[project.scripts]
+cvmodel = "cv_model.cli:main"
+
 
 [dependency-groups]
 tests = [ "pytest", "pytest-cov",]

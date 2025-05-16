@@ -339,7 +339,7 @@
       .map(highlight => {
         let summary_str = highlight.summary + ": "
         let description_str = highlight.description
-        if highlight.description.len() == 0 {
+        if highlight.summary.len() == 0 {
           description_str = ""
         }
         [- #text(weight: "bold")[#summary_str]#description_str]
@@ -429,8 +429,8 @@
     startDate: "{{ work.startDate }}",
     endDate: "{{ work.endDate }}",
     highlights: (
-{% for hl in work.highlights %}
-      "{{ hl }}",
+{% for hl in work.highlights_typst %}
+      [{{ hl }}],
 {% endfor %}
     ),
   ),
@@ -462,8 +462,8 @@
     endDate: "{{ project.endDate }}",
     description: "{{ project.description }}",
     highlights: (
-{% for hl in project.highlights %}
-     "{{ hl }}",
+{% for hl in project.highlights_typst %}
+      [{{ hl }}],
 {% endfor %}
     ),
   ),
@@ -495,8 +495,8 @@
     summary: "{{ volunteer.summary }}",
     location: "{{ volunteer.location }}",
     highlights: (
-{% for hl in volunteer.highlights %}
-      "{{ hl }}",
+{% for hl in volunteer.highlights_typst %}
+      [{{ hl }}],
 {% endfor %}
     ),
   ),
@@ -588,10 +588,10 @@ custom sections
 #let custom_section_{{ section_id }} = (
   title: "{{ custom_section.title }}",
   highlights: (
-{% for highlight in custom_section.highlights %}
+{% for highlight in custom_section.highlights_typst %}
     (
       summary: "{{ highlight.summary }}",
-      description: "{{ highlight.description }}",
+      description: [{{ highlight.description }}],
     ),
 {% endfor %}
   )
