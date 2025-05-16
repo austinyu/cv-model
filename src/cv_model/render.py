@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Literal, overload
 
 from jinja2 import Environment, FileSystemLoader
-import ujson5
+import json
 import yaml
 import tomllib
 import typst
@@ -76,7 +76,7 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         )
     parsed_content = None
     try:
-        parsed_content = ujson5.loads(src)
+        parsed_content = json.loads(src)
     except Exception:
         pass
 

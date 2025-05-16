@@ -588,7 +588,7 @@ class CustomSection(BaseModel):
 
 class Resume(BaseModel):
     json_schema: str = Field(
-        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/{consts.RESUME_SCHEMA_NAME}",
+        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schemas/{consts.RESUME_SCHEMA_NAME}",
         alias="$schema",
     )
     basics: Basics = Field(
@@ -824,7 +824,7 @@ COLOR_DESCRIPTION = "Color in hex format. e.g. #000000"
 
 class RenderCtx(BaseModel):
     json_schema: str = Field(
-        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/{consts.CTX_SCHEMA_NAME}",
+        default=f"https://raw.githubusercontent.com/austinyu/cv-model/refs/heads/main/schemas/{consts.CTX_SCHEMA_NAME}",
         alias="$schema",
     )
     page_size: PaperSize = Field(

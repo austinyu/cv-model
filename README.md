@@ -1,5 +1,10 @@
 # cv-model
 
+- Roadmap
+  - markdown encoder & decoder
+  - watchdog
+
+
 I want to start working on a full stack project. The idea is to help ordinary people write resume in a professional way.
 
 - frontend: nextjs

@@ -23,6 +23,6 @@ from .utils import (
 )
 
 try:
-    __version__ = version("impypeshw")
+    __version__ = version("cv_model")
 except PackageNotFoundError:
     __version__ = "unknown"
