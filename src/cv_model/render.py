@@ -70,10 +70,18 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         render_ctx: The render context to use.
     """
     path_maybe = Path(src)
-    if path_maybe.exists():
-        return generate(
-            path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
-        )
+    try:
+        if path_maybe.exists():
+            return generate(
+                path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
+            )
+    except OSError as e:
+        # If path is too long, treat it as non-existent
+        if e.errno == 36:  # File name too long error on Unix-like systems
+            pass
+        else:
+            # Re-raise if it's not a "file name too long" error
+            raise e
     parsed_content = None
     try:
         parsed_content = json.loads(src)
