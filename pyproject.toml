@@ -73,12 +73,12 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.hatch.build.targets.sdist]
-include = [ "README.md", "LICENSE", "CHANGELOG.md", "*.typ"]
+include = [ "README.md", "LICENSE", "CHANGELOG.md", "*.typ", "*.py"]
 exclude = []
 
 [tool.hatch.build.targets.wheel]
 packages = [ "src/cv_model",]
-include = [ "*.typ"]
+include = [ "*.typ", "*.py"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/cv_model" = "cv_model"
