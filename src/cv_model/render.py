@@ -70,7 +70,7 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         render_ctx: The render context to use.
     """
     path_maybe = Path(src)
-    if len(str(src)) < 100 and path_maybe.exists():
+    if not (set(str(src)) & set(["{", "["])) and path_maybe.exists():
         return generate(
             path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
         )
@@ -116,9 +116,11 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
 
 
 def generate_from_model(
-    model: models.Resume, output_path: str | Path, template_name: consts.TemplateName, render_ctx
+    model: models.Resume,
+    output_path: str | Path,
+    template_name: consts.TemplateName,
+    render_ctx,
 ) -> None:
-
     custom_section_titles = [section.title for section in model.custom_sections]
     for section_name in render_ctx.section_order:
         if section_name in models.DEFAULT_SECTIONS:
