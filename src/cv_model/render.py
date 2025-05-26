@@ -4,7 +4,7 @@ from typing import Literal, overload
 from jinja2 import Environment, FileSystemLoader
 import json
 import yaml
-import tomllib
+import toml
 import typst
 
 from . import consts
@@ -70,18 +70,10 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         render_ctx: The render context to use.
     """
     path_maybe = Path(src)
-    try:
-        if path_maybe.exists():
-            return generate(
-                path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
-            )
-    except OSError as e:
-        # If path is too long, treat it as non-existent
-        if e.errno == 36:  # File name too long error on Unix-like systems
-            pass
-        else:
-            # Re-raise if it's not a "file name too long" error
-            raise e
+    if len(src) < 100 and path_maybe.exists():
+        return generate(
+            path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
+        )
     parsed_content = None
     try:
         parsed_content = json.loads(src)
@@ -96,7 +88,7 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
 
     if parsed_content is None:
         try:
-            parsed_content = tomllib.loads(src)
+            parsed_content = toml.loads(src)
         except Exception:
             pass
 
