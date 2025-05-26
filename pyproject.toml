@@ -1,10 +1,9 @@
 [build-system]
-requires = [ "hatchling",]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "cv-model"
-version = "0.0.0"
 description = ""
 readme = "README.md"
 requires-python = ">=3.10"
@@ -19,7 +18,8 @@ dependencies = [
     "typer>=0.15.4",
     "typst>=0.13.2",
 ]
-dynamic = []
+dynamic = ["version"]
+
 [[project.authors]]
 name = "Austin Yu"
 email = "yuxm.austin1023@gmail.com"
@@ -82,3 +82,6 @@ include = [ "*.typ"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src/cv_model" = "cv_model"
+
+[tool.hatch.version]
+source = "vcs"
