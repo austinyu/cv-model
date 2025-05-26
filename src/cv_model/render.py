@@ -70,7 +70,7 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         render_ctx: The render context to use.
     """
     path_maybe = Path(src)
-    if len(src) < 100 and path_maybe.exists():
+    if len(str(src)) < 100 and path_maybe.exists():
         return generate(
             path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
         )
