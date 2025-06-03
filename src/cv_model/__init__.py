@@ -24,5 +24,5 @@ from .utils import (
 
 try:
     __version__ = version("cv_model")
-except PackageNotFoundError:
+except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"

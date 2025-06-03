@@ -673,6 +673,48 @@ class Resume(BaseModel):
             ),
         )
 
+    @staticmethod
+    def load(src: str) -> Resume:
+        """
+        Load a Resume model from a JSON, YAML, or TOML string or file path.
+
+        Args:
+            src: A string containing the resume data in JSON, YAML, or TOML format.
+
+        Returns:
+            A Resume model instance.
+        """
+
+        import json
+        import yaml
+        import toml
+
+        parsed_content = None
+        # Try to parse the string as JSON, YAML, or TOML
+        src = src.strip()
+        if src.startswith("{") or src.startswith("["):
+            # Assume it's JSON
+            parsed_content = json.loads(src)
+        else:
+            # Try YAML and TOML
+            parsed_content = None
+            try:
+                parsed_content = yaml.safe_load(src)
+            except Exception:
+                pass
+
+            if parsed_content is None:
+                try:
+                    parsed_content = toml.loads(src)
+                except Exception:
+                    pass
+
+        if parsed_content is None:
+            raise ValueError("src must be a valid JSON, YAML, or TOML string or file path.")
+
+        return Resume.model_validate(parsed_content)
+
+
 
 PaperSize = Literal[
     "a0",

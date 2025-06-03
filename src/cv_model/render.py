@@ -69,33 +69,36 @@ def generate(src, output_path, template_name, render_ctx=models.RenderCtx()) -> 
         template_name: The name of the template to use.
         render_ctx: The render context to use.
     """
-    path_maybe = Path(src)
-    if not (set(str(src)) & set(["{", "["])) and path_maybe.exists():
-        return generate(
-            path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
-        )
-    parsed_content = None
-    try:
-        parsed_content = json.loads(src)
-    except Exception:
-        pass
-
-    if parsed_content is None:
+    if not isinstance(src, models.Resume):
+        path_maybe = Path(src)
+        if not (set(str(src)) & set(["{", "["])) and path_maybe.exists():
+            return generate(
+                path_maybe.read_text(encoding="utf-8"), output_path, template_name, render_ctx
+            )
+        parsed_content = None
         try:
-            parsed_content = yaml.safe_load(src)
+            parsed_content = json.loads(src)
         except Exception:
             pass
 
-    if parsed_content is None:
-        try:
-            parsed_content = toml.loads(src)
-        except Exception:
-            pass
+        if parsed_content is None:
+            try:
+                parsed_content = yaml.safe_load(src)
+            except Exception:
+                pass
 
-    if parsed_content is None:
-        raise ValueError("src must be a valid JSON, YAML, or TOML string or file path.")
+        if parsed_content is None:
+            try:
+                parsed_content = toml.loads(src)
+            except Exception:
+                pass
 
-    model = models.Resume.model_validate(parsed_content)
+        if parsed_content is None:
+            raise ValueError("src must be a valid JSON, YAML, or TOML string or file path.")
+
+        model = models.Resume.model_validate(parsed_content)
+    else:
+        model = src
 
     custom_section_titles = [section.title for section in model.custom_sections]
     for section_name in render_ctx.section_order:
